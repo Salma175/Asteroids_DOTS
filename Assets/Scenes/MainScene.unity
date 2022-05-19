@@ -174,7 +174,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 50
   orthographic: 1
   orthographic size: 5
   m_Depth: -1
@@ -241,7 +241,7 @@ MonoBehaviour:
   RotationSpeed: 2
   MoveSpeed: 4
   FireRate: 3
-  FireSpeed: 5
+  FireSpeed: 10
   MissilePrefab: {fileID: 209404027106855853, guid: 85db8d1f65bea594aa995213073c7b9f, type: 3}
 --- !u!212 &1379430869
 SpriteRenderer:
@@ -389,3 +389,71 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1718361094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1718361096}
+  - component: {fileID: 1718361095}
+  - component: {fileID: 1718361097}
+  m_Layer: 0
+  m_Name: AsteroidSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1718361095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718361094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0685f94ebe19874fbab8ac42284f6c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Sprites:
+  - {fileID: 21300000, guid: 5d0a4d942e335fd46b9d40a762c6dc60, type: 3}
+  - {fileID: 21300000, guid: eb704f8b499605c43874bc67ad14cd48, type: 3}
+  - {fileID: 21300000, guid: 2bbbd552f96da4546bd5ef102de7b8d1, type: 3}
+  - {fileID: 21300000, guid: ef98796fed01c914bbae40b0f467b4e5, type: 3}
+  - {fileID: 21300000, guid: 188b25973562cf6408d433dfb8c27a23, type: 3}
+  Prefab: {fileID: 568457224845219186, guid: 088c548c4de046f4e9ac2a41e1dbe2cc, type: 3}
+  SpawnRate: 0.5
+  MinSpeed: 0.5
+  MaxSpeed: 2
+  PathVariation: 0.1
+--- !u!4 &1718361096
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718361094}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1718361097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718361094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0

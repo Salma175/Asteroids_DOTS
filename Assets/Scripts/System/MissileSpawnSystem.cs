@@ -10,7 +10,6 @@ partial class MissileSpawnSystem : SystemBase
 
     protected override void OnUpdate()
     {
-
         var playerEntity = GetSingletonEntity<Player>();
         var player = GetSingleton<Player>();
         var playerRot = EntityManager.GetComponentData<Rotation>(playerEntity);
@@ -27,7 +26,7 @@ partial class MissileSpawnSystem : SystemBase
 
             EntityManager.SetComponentData(missile, new PhysicsVelocity
             {
-                Linear = math.mul(playerRot.Value, new float3(0f, player.FireSpeed, 0f)).xyz
+                Linear = math.mul(playerRot.Value, new float3(0f, player.FireSpeed, 0f))
             });
 
             m_ElapsedTime = 0;
