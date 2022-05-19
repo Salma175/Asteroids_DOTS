@@ -1,10 +1,10 @@
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
+using Unity.Transforms;
 
 partial class MissileHitSystem : SystemBase
 {
-    /* protected override void OnCreate()
+    protected override void OnCreate()
      {
          base.OnCreate();
          RequireSingletonForUpdate<ExplosionSpawner>();
@@ -12,6 +12,7 @@ partial class MissileHitSystem : SystemBase
 
      protected override void OnUpdate()
      {
+        /*
          var physicsWorldSystem = World.GetExistingSystem<PhysicsWorldSystem>();
          var physicsWorld = physicsWorldSystem.PhysicsWorld;
 
@@ -19,7 +20,6 @@ partial class MissileHitSystem : SystemBase
 
          var cmdBuffer = new EntityCommandBuffer(Allocator.TempJob);
 
-         var didExplode = false;
          Entities.WithAll<Missile>()
             .ForEach((
                 Entity missileEntity,
@@ -44,25 +44,11 @@ partial class MissileHitSystem : SystemBase
 
                     cmdBuffer.DestroyEntity(asteroidEntity);
                     cmdBuffer.DestroyEntity(missileEntity);
-
-                    didExplode = true;
                 }
             }).Run();
 
          cmdBuffer.Playback(EntityManager);
          cmdBuffer.Dispose();
-
-         if (didExplode)
-         {
-             var randomSfx = m_Random.NextInt(0, 3);
-             var explosionSfx = randomSfx == 2 ? AudioTypes.AsteroidExplosionLarge :
-                 randomSfx == 1 ? AudioTypes.AsteroidExplosionMedium :
-                 AudioTypes.AsteroidExplosionSmall;
-
-             AudioUtils.PlaySound(EntityManager, explosionSfx);
-         }
-     }*/
-    protected override void OnUpdate()
-    {
-    }
+        */
+     }
 }

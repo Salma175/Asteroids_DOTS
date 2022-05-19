@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Physics;
 using Unity.Transforms;
+using Unity.U2D.Entities.Physics;
 using UnityEngine;
 
 partial class MissileSpawnSystem : SystemBase
@@ -26,7 +26,7 @@ partial class MissileSpawnSystem : SystemBase
 
             EntityManager.SetComponentData(missile, new PhysicsVelocity
             {
-                Linear = math.mul(playerRot.Value, new float3(0f, player.FireSpeed, 0f))
+                Linear = math.mul(playerRot.Value, new float3(0f, player.FireSpeed, 0f)).xy
             });
 
             m_ElapsedTime = 0;

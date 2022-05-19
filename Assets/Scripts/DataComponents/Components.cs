@@ -29,3 +29,19 @@ public struct AsteroidSprite : IBufferElementData
 {
     public Entity Sprite;
 }
+
+public struct Explosion : IComponentData
+{
+    public float Timer;
+}
+
+public struct ExplosionSpawner : IComponentData
+{
+    public Entity Prefab;
+    public float TimePerSprite;
+}
+
+public struct ExplosionSprite : IBufferElementData
+{
+    public Entity Sprite;
+}
