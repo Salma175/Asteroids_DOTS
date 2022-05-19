@@ -1,8 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Transforms;
-using Unity.U2D.Entities.Physics;
-using UnityEngine;
 
 
 partial class AsteroidSpawnSystem : SystemBase
@@ -37,7 +36,7 @@ partial class AsteroidSpawnSystem : SystemBase
            
             EntityManager.SetComponentData(asteroid, new PhysicsVelocity
             {
-                Linear = velocity.xy
+                Linear = velocity
             });
 
             m_ElapsedTime = 0;
