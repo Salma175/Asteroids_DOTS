@@ -1,6 +1,7 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
@@ -10,16 +11,16 @@ using UnityEngine;
 partial class MissileHitSystem : SystemBase
 {
 
-    BuildPhysicsWorld buildPhysicsWorldSystem;
     StepPhysicsWorld stepPhysicsWorld;
+    BuildPhysicsWorld buildPhysicsWorld;
     EndSimulationEntityCommandBufferSystem entityCommandBufferSystem;
 
     protected override void OnCreate()
      {
          base.OnCreate();
 
-        buildPhysicsWorldSystem = World.GetOrCreateSystem<BuildPhysicsWorld>();
         stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
+        buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
         entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
 
         RequireSingletonForUpdate<ExplosionSpawner>();
@@ -27,12 +28,17 @@ partial class MissileHitSystem : SystemBase
 
     protected override void OnUpdate()
      {
-        //var explosions = GetSingleton<ExplosionSpawner>();
+        var explosions = GetSingleton<ExplosionSpawner>();
 
         var job = new CollisionEventSystemJob {
-            //explosionPrefab = explosions.Prefab,
-            buffer = entityCommandBufferSystem.CreateCommandBuffer()
+            explosionPrefab = explosions.Prefab,
+            buffer = entityCommandBufferSystem.CreateCommandBuffer(),
+            translationData = GetComponentDataFromEntity<Translation>(),
+            asteroids = GetComponentDataFromEntity<Asteroid>(),
+            missiles = GetComponentDataFromEntity<Missile>(),
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
+
+        Dependency = job;
 
         entityCommandBufferSystem.AddJobHandleForProducer(job);
      }
@@ -41,18 +47,53 @@ partial class MissileHitSystem : SystemBase
    [BurstCompile]
     struct CollisionEventSystemJob : ITriggerEventsJob
     {
-        // public Entity explosionPrefab;
+        public Entity explosionPrefab;
         public EntityCommandBuffer buffer;
+        public ComponentDataFromEntity<Translation> translationData;
+        public ComponentDataFromEntity<Asteroid> asteroids;
+        public ComponentDataFromEntity<Missile> missiles;
         public void Execute(TriggerEvent triggerEvent)
         {
-            Debug.Log($"collision event: {triggerEvent}. Entities: {triggerEvent.EntityA}, {triggerEvent.EntityB}");
+            bool isExplosion = false;
+            float3 translation = float3.zero;
+            Entity entityA = triggerEvent.EntityA;
+            Entity entityB = triggerEvent.EntityB;
 
-            //Translation tr= manager.GetComponentData<Translation>(triggerEvent.EntityA);
-            //var exp = cmdBuffer.Instantiate(explosionPrefab);
-            //cmdBuffer.SetComponent(exp, new Translation { Value = tr.Value });
+            bool isBodyAEnemy = asteroids.HasComponent(entityA);
+            bool isBodyBEnemy = asteroids.HasComponent(entityB);
 
-            buffer.DestroyEntity(triggerEvent.EntityA);
-            buffer.DestroyEntity(triggerEvent.EntityB);
+            // Ignoring Triggers overlapping other Triggers
+            if (isBodyAEnemy && isBodyBEnemy)
+                return;
+
+            bool isBodyAPlayer = missiles.HasComponent(entityA);
+            bool isBodyBPlayer = missiles.HasComponent(entityB);
+
+            // Ignoring overlapping static bodies
+            if ((isBodyAEnemy && !isBodyBPlayer) ||
+                (isBodyBEnemy && !isBodyAPlayer))
+                return;
+
+            if (isBodyAEnemy && isBodyBPlayer)
+            {
+                translation = translationData[entityA].Value;
+                isExplosion = true;
+            }
+
+            if (isBodyBEnemy && isBodyAPlayer)
+            {
+                translation = translationData[entityB].Value;
+                isExplosion = true;
+            }
+
+            if (isExplosion)
+            {
+                var exp = buffer.Instantiate(explosionPrefab);
+                buffer.SetComponent(exp, new Translation { Value = translation });
+
+                buffer.DestroyEntity(entityB);
+                buffer.DestroyEntity(entityA);
+            }
         }
     }
 }
