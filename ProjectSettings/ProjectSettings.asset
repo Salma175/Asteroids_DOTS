@@ -563,7 +563,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: DOTS_ADD_PARTIAL_KEYWORD
+    1: UNITY_PHYSICS_DISABLE_INTEGRITY_CHECKS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

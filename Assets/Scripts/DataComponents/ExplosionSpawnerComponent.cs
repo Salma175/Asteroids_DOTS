@@ -26,7 +26,7 @@ public class ExplosionSpawnerComponent : MonoBehaviour, IConvertGameObjectToEnti
         {
             buffer.Add(new ExplosionSprite
             {
-                Sprite = conversionSystem.GetPrimaryEntity(s)
+                Sprite =  conversionSystem.GetPrimaryEntity(s)
             });
         }
     }

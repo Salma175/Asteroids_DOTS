@@ -1,54 +1,58 @@
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Transforms;
+using UnityEngine;
 
+[UpdateAfter(typeof(EndFramePhysicsSystem))]
 partial class MissileHitSystem : SystemBase
 {
+
+    BuildPhysicsWorld buildPhysicsWorldSystem;
+    StepPhysicsWorld stepPhysicsWorld;
+    EndSimulationEntityCommandBufferSystem entityCommandBufferSystem;
+
     protected override void OnCreate()
      {
          base.OnCreate();
-         RequireSingletonForUpdate<ExplosionSpawner>();
-     }
 
-     protected override void OnUpdate()
+        buildPhysicsWorldSystem = World.GetOrCreateSystem<BuildPhysicsWorld>();
+        stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
+        entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
+        RequireSingletonForUpdate<ExplosionSpawner>();
+    }
+
+    protected override void OnUpdate()
      {
-        /*
-         var physicsWorldSystem = World.GetExistingSystem<PhysicsWorldSystem>();
-         var physicsWorld = physicsWorldSystem.PhysicsWorld;
+        //var explosions = GetSingleton<ExplosionSpawner>();
 
-         var explosions = GetSingleton<ExplosionSpawner>();
+        var job = new CollisionEventSystemJob {
+            //explosionPrefab = explosions.Prefab,
+            buffer = entityCommandBufferSystem.CreateCommandBuffer()
+        }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
-         var cmdBuffer = new EntityCommandBuffer(Allocator.TempJob);
-
-         Entities.WithAll<Missile>()
-            .ForEach((
-                Entity missileEntity,
-                in PhysicsColliderBlob collider,
-                in Translation tr,
-                in Rotation rot) =>
-            {
-                     // check with missile
-                     if (physicsWorld.OverlapCollider(
-                    new OverlapColliderInput
-                    {
-                        Collider = collider.Collider,
-                        Transform = new PhysicsTransform(tr.Value, rot.Value),
-                        Filter = collider.Collider.Value.Filter
-                    },
-                    out OverlapColliderHit hit))
-                {
-                    var asteroidEntity = physicsWorld.AllBodies[hit.PhysicsBodyIndex].Entity;
-
-                    var exp = cmdBuffer.Instantiate(explosions.Prefab);
-                    cmdBuffer.SetComponent(exp, new Translation { Value = tr.Value });
-
-                    cmdBuffer.DestroyEntity(asteroidEntity);
-                    cmdBuffer.DestroyEntity(missileEntity);
-                }
-            }).Run();
-
-         cmdBuffer.Playback(EntityManager);
-         cmdBuffer.Dispose();
-        */
+        entityCommandBufferSystem.AddJobHandleForProducer(job);
      }
+
+
+   [BurstCompile]
+    struct CollisionEventSystemJob : ITriggerEventsJob
+    {
+        // public Entity explosionPrefab;
+        public EntityCommandBuffer buffer;
+        public void Execute(TriggerEvent triggerEvent)
+        {
+            Debug.Log($"collision event: {triggerEvent}. Entities: {triggerEvent.EntityA}, {triggerEvent.EntityB}");
+
+            //Translation tr= manager.GetComponentData<Translation>(triggerEvent.EntityA);
+            //var exp = cmdBuffer.Instantiate(explosionPrefab);
+            //cmdBuffer.SetComponent(exp, new Translation { Value = tr.Value });
+
+            buffer.DestroyEntity(triggerEvent.EntityA);
+            buffer.DestroyEntity(triggerEvent.EntityB);
+        }
+    }
 }
