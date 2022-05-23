@@ -26,6 +26,7 @@ partial class PlayerHitSystem : SystemBase
 
         Dependency = new CollisionEventSystemJob
         {
+            gameState = gameState,
             gameStateEntity = GetSingletonEntity<GameState>(),
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
             asteroids = GetComponentDataFromEntity<Asteroid>(),
@@ -39,6 +40,7 @@ partial class PlayerHitSystem : SystemBase
     [BurstCompile]
     struct CollisionEventSystemJob : ITriggerEventsJob
     {
+        [ReadOnly] public GameState gameState;
         public Entity gameStateEntity;
         public EntityCommandBuffer buffer;
         [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
@@ -63,12 +65,26 @@ partial class PlayerHitSystem : SystemBase
                 (isBodyBEnemy && !isBodyAPlayer))
                 return;
 
-            var isPlayerDead = isBodyAEnemy && isBodyBPlayer || isBodyBEnemy && isBodyAPlayer;
+            var isPlayerHitbyEnemy = isBodyAEnemy && isBodyBPlayer || isBodyBEnemy && isBodyAPlayer;
+
+            if (isPlayerHitbyEnemy) {
+                buffer.SetComponent(gameStateEntity, new GameState
+                {
+                    Value = GameStates.InGame,
+                    Lives = gameState.Lives - 1
+                });
+
+            }
+            var isZeroLivesLeft = gameState.Lives == 0;
+
+            var isPlayerDead = isPlayerHitbyEnemy && isZeroLivesLeft;
+
             if (isPlayerDead)
             {
                 buffer.SetComponent(gameStateEntity, new GameState
                 {
-                    Value = GameStates.Start
+                    Value = GameStates.Start,
+                    Lives = Constamts.LIVES
                 });
             }
         }

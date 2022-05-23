@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExplosionSpawnerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
 {
-    public Sprite[] Sprites;
+    public Sprite[] sprites;
 
     public GameObject Prefab = null;
     public float TimePerSprite = 0.05f;
@@ -19,10 +19,10 @@ public class ExplosionSpawnerComponent : MonoBehaviour, IConvertGameObjectToEnti
 
         var buffer = dstManager.AddBuffer<ExplosionSprite>(entity);
 
-        if (Sprites == null)
+        if (sprites == null)
             return;
 
-        foreach (var s in Sprites)
+        foreach (var s in sprites)
         {
             buffer.Add(new ExplosionSprite
             {
@@ -45,10 +45,10 @@ class DeclareExplosionSpriteReference : GameObjectConversionSystem
     {
         Entities.ForEach((ExplosionSpawnerComponent mgr) =>
         {
-            if (mgr.Sprites == null)
+            if (mgr.sprites == null)
                 return;
 
-            foreach (var s in mgr.Sprites)
+            foreach (var s in mgr.sprites)
             {
                 DeclareReferencedAsset(s);
             }

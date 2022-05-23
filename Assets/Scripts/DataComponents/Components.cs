@@ -46,17 +46,10 @@ public struct ExplosionSprite : IBufferElementData
     public Entity Sprite;
 }
 
-
-public enum GameStates
-{
-    None,
-    Start,
-    InGame
-}
-
 public struct GameState : IComponentData
 {
     public GameStates Value;
+    public int Lives;
 }
 
 public struct GameShowState : IComponentData

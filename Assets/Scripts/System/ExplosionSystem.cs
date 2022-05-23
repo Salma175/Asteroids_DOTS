@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -42,10 +40,10 @@ partial class ExplosionSystem : SystemBase
                 }
                 else
                 {
-                    //sr.sprite = explosionSprites[activeSprite].Sprite;
+                    // sr.sprite = explosionSprites[activeSprite].Sprite;
                 }
             }).Run();
 
-       // ecbSystem.AddJobHandleForProducer(Dependency);
+        ecbSystem.AddJobHandleForProducer(Dependency);
     }
 }

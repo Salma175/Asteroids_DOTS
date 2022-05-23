@@ -45,6 +45,7 @@ public partial class RestartSystem : SystemBase
         {
             gameState.Value = GameStates.InGame;
             SetSingleton(gameState);
+           // GameUIManager.instance.EnableInGameUI(gameState.Value);
         }
     }
 
@@ -68,6 +69,7 @@ public partial class RestartSystem : SystemBase
             {
                 Value = quaternion.identity
             });
+            //GameUIManager.instance.DisableInGameUI(gameState.Value);
         }
     }
 

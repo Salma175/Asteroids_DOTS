@@ -5,7 +5,6 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
-using UnityEngine;
 
 [UpdateAfter(typeof(EndFramePhysicsSystem))]
 partial class MissileHitSystem : SystemBase
@@ -13,6 +12,7 @@ partial class MissileHitSystem : SystemBase
 
     StepPhysicsWorld stepPhysicsWorld;
     EndSimulationEntityCommandBufferSystem entityCommandBufferSystem;
+    Entity scoreTextEntity;
 
     protected override void OnCreate()
      {
@@ -39,8 +39,7 @@ partial class MissileHitSystem : SystemBase
         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
      }
 
-
-   [BurstCompile]
+    [BurstCompile]
     struct CollisionEventSystemJob : ITriggerEventsJob
     {
         public Entity explosionPrefab;
@@ -48,6 +47,7 @@ partial class MissileHitSystem : SystemBase
         public ComponentDataFromEntity<Translation> translationData;
         [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
         [ReadOnly] public ComponentDataFromEntity<Missile> missiles;
+
         public void Execute(TriggerEvent triggerEvent)
         {
             bool isExplosion = false;
@@ -89,7 +89,12 @@ partial class MissileHitSystem : SystemBase
 
                 buffer.DestroyEntity(entityB);
                 buffer.DestroyEntity(entityA);
+
+                //GameUIManager.instance.UpdateScore();
+
             }
         }
     }
+
+  
 }
