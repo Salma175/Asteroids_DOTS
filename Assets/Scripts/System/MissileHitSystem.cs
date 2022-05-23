@@ -28,7 +28,7 @@ partial class MissileHitSystem : SystemBase
      {
         var explosions = GetSingleton<ExplosionSpawner>();
 
-        var job = new CollisionEventSystemJob {
+        Dependency = new CollisionEventSystemJob {
             explosionPrefab = explosions.Prefab,
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
             translationData = GetComponentDataFromEntity<Translation>(),
@@ -36,9 +36,7 @@ partial class MissileHitSystem : SystemBase
             missiles = GetComponentDataFromEntity<Missile>(),
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
-        Dependency = job;
-
-        entityCommandBufferSystem.AddJobHandleForProducer(job);
+        entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
      }
 
 

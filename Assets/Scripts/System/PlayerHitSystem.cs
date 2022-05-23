@@ -24,7 +24,7 @@ partial class PlayerHitSystem : SystemBase
         if (gameState.Value != GameStates.InGame)
             return;
 
-        var job = new CollisionEventSystemJob
+        Dependency = new CollisionEventSystemJob
         {
             gameStateEntity = GetSingletonEntity<GameState>(),
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
@@ -32,8 +32,7 @@ partial class PlayerHitSystem : SystemBase
             player = GetComponentDataFromEntity<Player>()
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
-        Dependency = job;
-        entityCommandBufferSystem.AddJobHandleForProducer(job);
+        entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
     }
 
 
@@ -71,7 +70,6 @@ partial class PlayerHitSystem : SystemBase
                 {
                     Value = GameStates.Start
                 });
-                Debug.Log("Player Dead");
             }
         }
     }

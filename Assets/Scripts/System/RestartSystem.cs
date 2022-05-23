@@ -40,8 +40,19 @@ public partial class RestartSystem : SystemBase
     private void Start_performed(InputAction.CallbackContext obj)
     {
         var gameState = GetSingleton<GameState>();
-        var playerEntity = GetSingletonEntity<Player>();
 
+        if (gameState.Value == GameStates.Start)
+        {
+            gameState.Value = GameStates.InGame;
+            SetSingleton(gameState);
+        }
+    }
+
+    protected override void OnUpdate()
+    {
+        var gameState = GetSingleton<GameState>();
+        var playerEntity = GetSingletonEntity<Player>();
+        
         if (gameState.Value == GameStates.Start)
         {
             // remove all stuff
@@ -57,15 +68,7 @@ public partial class RestartSystem : SystemBase
             {
                 Value = quaternion.identity
             });
-
-            gameState.Value = GameStates.InGame;
-            SetSingleton(gameState);
         }
-    }
-
-    protected override void OnUpdate()
-    {
-        
     }
 
 }
