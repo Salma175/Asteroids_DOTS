@@ -65,11 +65,6 @@ partial class MissileHitSystem : SystemBase
             bool isBodyAPlayer = missiles.HasComponent(entityA);
             bool isBodyBPlayer = missiles.HasComponent(entityB);
 
-            // Ignoring overlapping static bodies
-            if ((isBodyAEnemy && !isBodyBPlayer) ||
-                (isBodyBEnemy && !isBodyAPlayer))
-                return;
-
             if (isBodyAEnemy && isBodyBPlayer)
             {
                 translation = translationData[entityA].Value;
@@ -91,7 +86,6 @@ partial class MissileHitSystem : SystemBase
                 buffer.DestroyEntity(entityA);
 
                 //GameUIManager.instance.UpdateScore();
-
             }
         }
     }

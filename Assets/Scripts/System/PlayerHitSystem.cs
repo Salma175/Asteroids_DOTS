@@ -60,22 +60,32 @@ partial class PlayerHitSystem : SystemBase
             bool isBodyAPlayer = player.HasComponent(entityA);
             bool isBodyBPlayer = player.HasComponent(entityB);
 
-            // Ignoring overlapping static bodies
-            if ((isBodyAEnemy && !isBodyBPlayer) ||
-                (isBodyBEnemy && !isBodyAPlayer))
-                return;
+            bool isPlayerHitbyEnemy = false;
+            if (isBodyAEnemy && isBodyBPlayer)
+            {
+                buffer.DestroyEntity(entityA);
+                isPlayerHitbyEnemy = true;
+            }
 
-            var isPlayerHitbyEnemy = isBodyAEnemy && isBodyBPlayer || isBodyBEnemy && isBodyAPlayer;
+            if (isBodyBEnemy && isBodyAPlayer)
+            {
+                buffer.DestroyEntity(entityB);
+                isPlayerHitbyEnemy = true;
+            }
+            var livesLeft = gameState.Lives;
 
             if (isPlayerHitbyEnemy) {
+
+                livesLeft -= 1;
+
                 buffer.SetComponent(gameStateEntity, new GameState
                 {
                     Value = GameStates.InGame,
-                    Lives = gameState.Lives - 1
+                    Lives = livesLeft
                 });
 
             }
-            var isZeroLivesLeft = gameState.Lives == 0;
+            var isZeroLivesLeft = livesLeft == 0;
 
             var isPlayerDead = isPlayerHitbyEnemy && isZeroLivesLeft;
 

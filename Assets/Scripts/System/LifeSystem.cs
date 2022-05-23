@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
-
 public partial class LifeSystem : SystemBase
 {
     private GameStates currentGameState = GameStates.None;
@@ -31,8 +26,8 @@ public partial class LifeSystem : SystemBase
 
         if (gameState.Value != currentGameState)
             GameStateChangeUpdate(gameState.Value);
-        else if (gameState.Value == GameStates.InGame)
-            LifeReduction();
+        else if (gameState.Value == GameStates.InGame && gameState.Lives != noOfLives)
+            LifeReduction(gameState.Lives);
     }
 
     private void GameStateChangeUpdate(GameStates m_currentGameState)
@@ -91,18 +86,14 @@ public partial class LifeSystem : SystemBase
         noOfLives = gameState.Lives;
     }
 
-    private void LifeReduction()
+    private void LifeReduction(int m_lives)
     {
-        var gameState = GetSingleton<GameState>();
-        if (gameState.Lives == noOfLives)
-            return;
-
         var lifeManagerEntity = GetSingletonEntity<LifeManager>();
         var lifeBuffers = GetBufferFromEntity<Life>();
 
-        var hearts = lifeBuffers[lifeManagerEntity];
-        cmdBuffer.AddComponent<Disabled>(hearts[gameState.Lives].Value);
+        var lives = lifeBuffers[lifeManagerEntity];
+        cmdBuffer.AddComponent<Disabled>(lives[m_lives].Value);
 
-        noOfLives = gameState.Lives;
+        noOfLives = m_lives;
     }
 }

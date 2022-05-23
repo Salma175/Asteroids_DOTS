@@ -7,6 +7,7 @@ public class ExplosionSpawnerComponent : MonoBehaviour, IConvertGameObjectToEnti
     public Sprite[] sprites;
 
     public GameObject Prefab = null;
+
     public float TimePerSprite = 0.05f;
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
