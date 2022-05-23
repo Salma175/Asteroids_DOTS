@@ -34,6 +34,8 @@ partial class MissileHitSystem : SystemBase
             translationData = GetComponentDataFromEntity<Translation>(),
             asteroids = GetComponentDataFromEntity<Asteroid>(),
             missiles = GetComponentDataFromEntity<Missile>(),
+            gameState = GetSingleton<GameState>(),
+            gameStateEntity = GetSingletonEntity<GameState>(),
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
@@ -47,6 +49,8 @@ partial class MissileHitSystem : SystemBase
         public ComponentDataFromEntity<Translation> translationData;
         [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
         [ReadOnly] public ComponentDataFromEntity<Missile> missiles;
+        [ReadOnly] public GameState gameState;
+        [ReadOnly] public Entity gameStateEntity;
 
         public void Execute(TriggerEvent triggerEvent)
         {
@@ -85,7 +89,13 @@ partial class MissileHitSystem : SystemBase
                 buffer.DestroyEntity(entityB);
                 buffer.DestroyEntity(entityA);
 
-                //GameUIManager.instance.UpdateScore();
+
+                buffer.SetComponent(gameStateEntity, new GameState
+                {
+                    Value = GameStates.InGame,
+                    Lives = gameState.Lives,
+                    Score = (gameState.Score+1)
+                });
             }
         }
     }

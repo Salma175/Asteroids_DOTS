@@ -14,19 +14,20 @@ public class AsteroidSpawnerComponent : MonoBehaviour, IConvertGameObjectToEntit
         entityManager.AddComponentData(entity, new AsteroidSpawner
         {
             Prefab = conversionSystem.GetPrimaryEntity(Prefab),
-            Rate = Constamts.SpawnRate,
-            MinSpeed = Constamts.MinSpeed,
-            MaxSpeed = Constamts.MaxSpeed,
-            PathVariation = Constamts.PathVariation,
-            SpawnPosX = Constamts.SpawnPosX,
-            SpawnPosY = Constamts.SpawnPosY
+            Rate = Constants.SpawnRate,
+            MinSpeed = Constants.MinSpeed,
+            MaxSpeed = Constants.MaxSpeed,
+            PathVariation = Constants.PathVariation,
+            SpawnPosX = Constants.SpawnPosX,
+            SpawnPosY = Constants.SpawnPosY
         });
 
 
         entityManager.AddComponentData(entity, new GameState
         {
             Value = GameStates.Start,
-            Lives = Constamts.Lives
+            Lives = Constants.Lives,
+            Score = Constants.Zero
         });
 
         var buffer = entityManager.AddBuffer<AsteroidSprite>(entity);

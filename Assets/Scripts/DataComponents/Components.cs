@@ -50,6 +50,7 @@ public struct GameState : IComponentData
 {
     public GameStates Value;
     public int Lives;
+    public int Score;
 }
 
 public struct GameShowState : IComponentData
@@ -65,7 +66,6 @@ public struct GameStateObject : IBufferElementData
 public struct LifeManager : IComponentData
 {
     public Entity LifePrefab;
-    public int NoOfLives;
 }
 
 public struct Life : IBufferElementData

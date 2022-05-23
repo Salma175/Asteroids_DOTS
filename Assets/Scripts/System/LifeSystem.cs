@@ -42,16 +42,17 @@ public partial class LifeSystem : SystemBase
 
     private void DestroyLife()
     {
-        var heartManagerEntity = GetSingletonEntity<LifeManager>();
-        var heartBuffers = GetBufferFromEntity<Life>();
-        if (!heartBuffers.HasComponent(heartManagerEntity))
+        var lifeManager = GetSingleton<LifeManager>();
+        var lifeManagerEntity = GetSingletonEntity<LifeManager>();
+        var lifeBuffers = GetBufferFromEntity<Life>();
+        if (!lifeBuffers.HasComponent(lifeManagerEntity))
             return;
 
-        var hearts = heartBuffers[heartManagerEntity];
+        var lives = lifeBuffers[lifeManagerEntity];
 
-        for (var i = 0; i < hearts.Length; i++)
-            cmdBuffer.DestroyEntity(hearts[i].Value);
-        hearts.Clear();
+        for (var i = 0; i < lives.Length; i++)
+            cmdBuffer.DestroyEntity(lives[i].Value);
+        lives.Clear();
     }
 
     private void SpawnLifes()
@@ -60,7 +61,7 @@ public partial class LifeSystem : SystemBase
         var lifeManager = GetSingleton<LifeManager>();
         var lifeManagerEntity = GetSingletonEntity<LifeManager>();
 
-        var lifeAnchor = new float3(Constamts.LifeAnchorX,Constamts.LifeAnchorY,0);
+        var lifeAnchor = new float3(Constants.LifeAnchorX,Constants.LifeAnchorY,0);
 
         var lifeBuffer = cmdBuffer.AddBuffer<Life>(lifeManagerEntity);
 

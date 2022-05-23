@@ -41,7 +41,7 @@ partial class PlayerHitSystem : SystemBase
     struct CollisionEventSystemJob : ITriggerEventsJob
     {
         [ReadOnly] public GameState gameState;
-        public Entity gameStateEntity;
+        [ReadOnly] public Entity gameStateEntity;
         public EntityCommandBuffer buffer;
         [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
         [ReadOnly] public ComponentDataFromEntity<Player> player;
@@ -81,7 +81,8 @@ partial class PlayerHitSystem : SystemBase
                 buffer.SetComponent(gameStateEntity, new GameState
                 {
                     Value = GameStates.InGame,
-                    Lives = livesLeft
+                    Lives = livesLeft,
+                    Score = gameState.Score
                 });
 
             }
@@ -94,7 +95,8 @@ partial class PlayerHitSystem : SystemBase
                 buffer.SetComponent(gameStateEntity, new GameState
                 {
                     Value = GameStates.Start,
-                    Lives = Constamts.Lives
+                    Lives = Constants.Lives,
+                    Score = Constants.Zero
                 });
             }
         }

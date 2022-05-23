@@ -5,7 +5,7 @@ public enum GameStates
     InGame
 }
 
-public static class Constamts
+public static class Constants
 {
     public const int Lives = 3;
     public const float SpawnPosX = 10;
@@ -19,4 +19,5 @@ public static class Constamts
     public const float LifeAnchorX = -6;
     public const float LifeAnchorY = 4.5f;
 
+    public const int Zero = 0;
 }
