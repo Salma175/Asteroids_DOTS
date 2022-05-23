@@ -6,15 +6,13 @@ public partial class LifeSystem : SystemBase
     private GameStates currentGameState = GameStates.None;
     private int noOfLives = -1;
     private EntityCommandBuffer cmdBuffer;
+    private int score = -1;
 
     protected override void OnCreate()
     {
         base.OnCreate();
-
         RequireSingletonForUpdate<LifeManager>();
         RequireSingletonForUpdate<GameState>();
-
-       
     }
 
     protected override void OnUpdate()
@@ -28,18 +26,32 @@ public partial class LifeSystem : SystemBase
             GameStateChangeUpdate(gameState.Value);
         else if (gameState.Value == GameStates.InGame && gameState.Lives != noOfLives)
             LifeReduction(gameState.Lives);
+
+        if (gameState.Score != score) {
+            GameScoreChange(gameState.Score);
+        }
     }
 
     private void GameStateChangeUpdate(GameStates m_currentGameState)
     {
         if (m_currentGameState == GameStates.Start)
+        {
             DestroyLife();
+            GameUIManager.instance.DisableInGameUI();
+        }
         else if (m_currentGameState == GameStates.InGame)
+        {
             SpawnLifes();
+            GameUIManager.instance.EnableInGameUI();
+        }
 
         currentGameState = m_currentGameState;
     }
 
+    private void GameScoreChange(int m_score) {
+        GameUIManager.instance.UpdateScore(m_score);
+        score = m_score;
+    }
     private void DestroyLife()
     {
         var lifeManager = GetSingleton<LifeManager>();

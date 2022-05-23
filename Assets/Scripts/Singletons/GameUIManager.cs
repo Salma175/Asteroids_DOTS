@@ -11,9 +11,6 @@ public class GameUIManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI scoreText;
 
-    private GameStates currentState = GameStates.None;
-
-    private int score = 0;
     private void Awake()
     {
         if(instance == null) {
@@ -26,26 +23,14 @@ public class GameUIManager : MonoBehaviour
         ResetUI();
     }
 
-    public void EnableInGameUI(GameStates gameState) {
-        if (currentState != gameState)
-        {
-            canvas.SetActive(true);
-            currentState = gameState;
-        }
+    public void EnableInGameUI() {
+        canvas.SetActive(true);
     }
-
-    public void DisableInGameUI(GameStates gameState)
+    public void DisableInGameUI()
     {
-        if (currentState != gameState)
-        {
-            Debug.Log("Reset UI");
-            ResetUI();
-            currentState = gameState;
-        }
+        ResetUI();
     }
-
-    public void UpdateScore() {
-        score += 1;
+    public void UpdateScore(int score) {
         scoreText.SetText(GetFormattedScore(score));
     }
 
@@ -55,8 +40,7 @@ public class GameUIManager : MonoBehaviour
 
     private void ResetUI()
     {
-        score = 0;
-        scoreText.SetText(GetFormattedScore(score));
+        scoreText.SetText(GetFormattedScore(0));
         canvas.SetActive(false);
     }
 }
