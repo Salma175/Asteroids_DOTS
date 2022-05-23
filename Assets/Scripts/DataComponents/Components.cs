@@ -61,3 +61,14 @@ public struct GameStateObject : IBufferElementData
 {
     public Entity Value;
 }
+
+public struct LifeManager : IComponentData
+{
+    public Entity LifePrefab;
+    public int NoOfLives;
+}
+
+public struct Life : IBufferElementData
+{
+    public Entity Value;
+}

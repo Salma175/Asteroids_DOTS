@@ -84,7 +84,7 @@ partial class PlayerHitSystem : SystemBase
                 buffer.SetComponent(gameStateEntity, new GameState
                 {
                     Value = GameStates.Start,
-                    Lives = Constamts.LIVES
+                    Lives = Constamts.Lives
                 });
             }
         }
