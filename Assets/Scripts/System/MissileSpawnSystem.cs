@@ -9,6 +9,10 @@ partial class MissileSpawnSystem : SystemBase
 
     protected override void OnUpdate()
     {
+        var gameState = GetSingleton<GameState>();
+        if (gameState.Value != GameStates.InGame)
+            return;
+
         var playerEntity = GetSingletonEntity<Player>();
         var player = GetSingleton<Player>();
         var playerRot = EntityManager.GetComponentData<Rotation>(playerEntity);

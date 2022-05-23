@@ -45,3 +45,26 @@ public struct ExplosionSprite : IBufferElementData
 {
     public Entity Sprite;
 }
+
+
+public enum GameStates
+{
+    None,
+    Start,
+    InGame
+}
+
+public struct GameState : IComponentData
+{
+    public GameStates Value;
+}
+
+public struct GameShowState : IComponentData
+{
+    public GameStates Value;
+}
+
+public struct GameStateObject : IBufferElementData
+{
+    public Entity Value;
+}

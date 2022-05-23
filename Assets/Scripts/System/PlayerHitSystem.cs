@@ -1,59 +1,51 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using Unity.Transforms;
 using UnityEngine;
 
-[UpdateAfter(typeof(EndFramePhysicsSystem))]
-partial class MissileHitSystem : SystemBase
+[AlwaysSynchronizeSystem]
+partial class PlayerHitSystem : SystemBase
 {
-
     StepPhysicsWorld stepPhysicsWorld;
     EndSimulationEntityCommandBufferSystem entityCommandBufferSystem;
 
     protected override void OnCreate()
-     {
-         base.OnCreate();
+    {
+        base.OnCreate();
 
         stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
         entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-
-        RequireSingletonForUpdate<ExplosionSpawner>();
     }
-
     protected override void OnUpdate()
-     {
-        var explosions = GetSingleton<ExplosionSpawner>();
+    {
+        var gameState = GetSingleton<GameState>();
+        if (gameState.Value != GameStates.InGame)
+            return;
 
-        var job = new CollisionEventSystemJob {
-            explosionPrefab = explosions.Prefab,
+        var job = new CollisionEventSystemJob
+        {
+            gameStateEntity = GetSingletonEntity<GameState>(),
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
-            translationData = GetComponentDataFromEntity<Translation>(),
             asteroids = GetComponentDataFromEntity<Asteroid>(),
-            missiles = GetComponentDataFromEntity<Missile>(),
+            player = GetComponentDataFromEntity<Player>()
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
         Dependency = job;
-
         entityCommandBufferSystem.AddJobHandleForProducer(job);
-     }
+    }
 
 
-   [BurstCompile]
+    [BurstCompile]
     struct CollisionEventSystemJob : ITriggerEventsJob
     {
-        public Entity explosionPrefab;
+        public Entity gameStateEntity;
         public EntityCommandBuffer buffer;
-        public ComponentDataFromEntity<Translation> translationData;
         [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
-        [ReadOnly] public ComponentDataFromEntity<Missile> missiles;
+        [ReadOnly] public ComponentDataFromEntity<Player> player;
         public void Execute(TriggerEvent triggerEvent)
         {
-            bool isExplosion = false;
-            float3 translation = float3.zero;
             Entity entityA = triggerEvent.EntityA;
             Entity entityB = triggerEvent.EntityB;
 
@@ -64,33 +56,22 @@ partial class MissileHitSystem : SystemBase
             if (isBodyAEnemy && isBodyBEnemy)
                 return;
 
-            bool isBodyAPlayer = missiles.HasComponent(entityA);
-            bool isBodyBPlayer = missiles.HasComponent(entityB);
+            bool isBodyAPlayer = player.HasComponent(entityA);
+            bool isBodyBPlayer = player.HasComponent(entityB);
 
             // Ignoring overlapping static bodies
             if ((isBodyAEnemy && !isBodyBPlayer) ||
                 (isBodyBEnemy && !isBodyAPlayer))
                 return;
 
-            if (isBodyAEnemy && isBodyBPlayer)
+            var isPlayerDead = isBodyAEnemy && isBodyBPlayer || isBodyBEnemy && isBodyAPlayer;
+            if (isPlayerDead)
             {
-                translation = translationData[entityA].Value;
-                isExplosion = true;
-            }
-
-            if (isBodyBEnemy && isBodyAPlayer)
-            {
-                translation = translationData[entityB].Value;
-                isExplosion = true;
-            }
-
-            if (isExplosion)
-            {
-                var exp = buffer.Instantiate(explosionPrefab);
-                buffer.SetComponent(exp, new Translation { Value = translation });
-
-                buffer.DestroyEntity(entityB);
-                buffer.DestroyEntity(entityA);
+                buffer.SetComponent(gameStateEntity, new GameState
+                {
+                    Value = GameStates.Start
+                });
+                Debug.Log("Player Dead");
             }
         }
     }

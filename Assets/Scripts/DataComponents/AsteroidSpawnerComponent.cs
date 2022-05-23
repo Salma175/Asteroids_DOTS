@@ -29,6 +29,11 @@ public class AsteroidSpawnerComponent : MonoBehaviour, IConvertGameObjectToEntit
         });
 
 
+        entityManager.AddComponentData(entity, new GameState
+        {
+            Value = GameStates.Start
+        });
+
         var buffer = entityManager.AddBuffer<AsteroidSprite>(entity);
 
         if (Sprites == null)

@@ -8,7 +8,6 @@ partial class PlayerMoveSystem : SystemBase
 {
     PlayerControls pc;
     InputAction movement;
-    InputAction fire;
 
     protected override void OnCreate() {
         base.OnCreate();
@@ -16,21 +15,15 @@ partial class PlayerMoveSystem : SystemBase
         pc = new PlayerControls();
         pc.Player.Enable();
         movement = pc.Player.Move;
-        fire = pc.Player.Fire;
 
-        fire.performed += Fire_performed;
     }
-
-    private void Fire_performed(InputAction.CallbackContext obj)
-    {
-        float spaceKey = obj.ReadValue<float>();
-
-        Debug.Log("Fire " + spaceKey);
-    }
-
 
     protected override void OnUpdate()
     {
+        var gameState = GetSingleton<GameState>();
+        if (gameState.Value != GameStates.InGame)
+            return;
+
         float hAxis = movement.ReadValue<Vector2>().x;
         float vAxis = movement.ReadValue<Vector2>().y;
 

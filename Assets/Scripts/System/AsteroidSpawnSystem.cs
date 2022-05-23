@@ -16,6 +16,9 @@ partial class AsteroidSpawnSystem : SystemBase
 
     protected override void OnUpdate()
     {
+        var gameState = GetSingleton<GameState>();
+        if (gameState.Value != GameStates.InGame)
+            return;
 
         var asteroidSpawner = GetSingleton<AsteroidSpawner>();
 
