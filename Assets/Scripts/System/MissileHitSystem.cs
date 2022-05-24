@@ -12,7 +12,6 @@ partial class MissileHitSystem : SystemBase
 
     StepPhysicsWorld stepPhysicsWorld;
     EndSimulationEntityCommandBufferSystem entityCommandBufferSystem;
-    Entity scoreTextEntity;
 
     protected override void OnCreate()
      {
@@ -99,6 +98,5 @@ partial class MissileHitSystem : SystemBase
             }
         }
     }
-
   
 }
