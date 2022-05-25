@@ -33,6 +33,7 @@ partial class MissileSpawnSystem : SystemBase
             });
 
             m_ElapsedTime = 0;
+            EventManager.PlayAudioEvent?.Invoke(AudioClipType.PlayerFire);
         }
     }
 }

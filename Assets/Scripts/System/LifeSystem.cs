@@ -37,24 +37,24 @@ public partial class LifeSystem : SystemBase
         if (m_currentGameState == GameStates.Start)
         {
             DestroyLife();
-            GameUIManager.instance.DisableInGameUI();
+            EventManager.HandleGameUIEvent?.Invoke(false);
         }
         else if (m_currentGameState == GameStates.InGame)
         {
             SpawnLifes();
-            GameUIManager.instance.EnableInGameUI();
+            EventManager.HandleGameUIEvent?.Invoke(true);
         }
 
         currentGameState = m_currentGameState;
     }
 
     private void GameScoreChange(int m_score) {
-        GameUIManager.instance.UpdateScore(m_score);
+        EventManager.ScoreUpdateEvent?.Invoke(m_score);
         score = m_score;
+        EventManager.PlayAudioEvent?.Invoke(AudioClipType.AsteroidExplosion);
     }
     private void DestroyLife()
     {
-        var lifeManager = GetSingleton<LifeManager>();
         var lifeManagerEntity = GetSingletonEntity<LifeManager>();
         var lifeBuffers = GetBufferFromEntity<Life>();
         if (!lifeBuffers.HasComponent(lifeManagerEntity))
@@ -108,5 +108,6 @@ public partial class LifeSystem : SystemBase
         cmdBuffer.AddComponent<Disabled>(lives[m_lives].Value);
 
         noOfLives = m_lives;
+        EventManager.PlayAudioEvent?.Invoke(AudioClipType.PlayerExplosion);
     }
 }

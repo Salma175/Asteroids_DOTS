@@ -14,8 +14,8 @@ partial class MissileHitSystem : SystemBase
     EndSimulationEntityCommandBufferSystem entityCommandBufferSystem;
 
     protected override void OnCreate()
-     {
-         base.OnCreate();
+    {
+        base.OnCreate();
 
         stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
         entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
@@ -24,10 +24,11 @@ partial class MissileHitSystem : SystemBase
     }
 
     protected override void OnUpdate()
-     {
+    {
         var explosions = GetSingleton<ExplosionSpawner>();
 
-        Dependency = new CollisionEventSystemJob {
+        Dependency = new CollisionEventSystemJob
+        {
             explosionPrefab = explosions.Prefab,
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
             translationData = GetComponentDataFromEntity<Translation>(),
@@ -38,7 +39,7 @@ partial class MissileHitSystem : SystemBase
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
-     }
+    }
 
     [BurstCompile]
     struct CollisionEventSystemJob : ITriggerEventsJob
@@ -53,7 +54,7 @@ partial class MissileHitSystem : SystemBase
 
         public void Execute(TriggerEvent triggerEvent)
         {
-            bool isExplosion = false;
+            bool didExplode = false;
             float3 translation = float3.zero;
             Entity entityA = triggerEvent.EntityA;
             Entity entityB = triggerEvent.EntityB;
@@ -71,16 +72,16 @@ partial class MissileHitSystem : SystemBase
             if (isBodyAEnemy && isBodyBPlayer)
             {
                 translation = translationData[entityA].Value;
-                isExplosion = true;
+                didExplode = true;
             }
 
             if (isBodyBEnemy && isBodyAPlayer)
             {
                 translation = translationData[entityB].Value;
-                isExplosion = true;
+                didExplode = true;
             }
 
-            if (isExplosion)
+            if (didExplode)
             {
                 var exp = buffer.Instantiate(explosionPrefab);
                 buffer.SetComponent(exp, new Translation { Value = translation });
@@ -93,10 +94,11 @@ partial class MissileHitSystem : SystemBase
                 {
                     Value = GameStates.InGame,
                     Lives = gameState.Lives,
-                    Score = (gameState.Score+1)
+                    Score = (gameState.Score + 1)
                 });
+                
             }
         }
     }
-  
+
 }

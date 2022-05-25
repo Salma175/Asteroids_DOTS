@@ -1,3 +1,4 @@
+using System;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -37,7 +38,7 @@ partial class PlayerHitSystem : SystemBase
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
             translationData = GetComponentDataFromEntity<Translation>(),
             asteroids = GetComponentDataFromEntity<Asteroid>(),
-            player = GetComponentDataFromEntity<Player>()
+            player = GetComponentDataFromEntity<Player>(),
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
@@ -52,12 +53,14 @@ partial class PlayerHitSystem : SystemBase
         public ComponentDataFromEntity<Translation> translationData;
         [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
         [ReadOnly] public ComponentDataFromEntity<Player> player;
-
         public void Execute(TriggerEvent triggerEvent)
         {
             var (isPlayerHitbyEnemy, translation) = IsPlayerHitByEnemy(triggerEvent.EntityA, triggerEvent.EntityB);
 
-            if (isPlayerHitbyEnemy)OnPlayerHitByEnemy(translation);
+            if (isPlayerHitbyEnemy)
+            {
+                OnPlayerHitByEnemy(translation);
+            }
         }
 
         private (bool,float3) IsPlayerHitByEnemy(Entity entityA, Entity entityB) {
