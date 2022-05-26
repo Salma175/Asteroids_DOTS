@@ -22,7 +22,7 @@ public static class Constants
     public const float MoveSpeed = 4f;
     public const float FireRate = 3f;
     public const float MissileSpeed = 5f;
-    public const float ShieldSpan = 5f;
+    public const float ShieldSpan = 20f;
 
     public const int Lives = 3;
     public const float SpawnPosX = 10;

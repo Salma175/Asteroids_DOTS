@@ -17,7 +17,10 @@ partial class ShieldSpawnerSystem: SystemBase
     protected override void OnUpdate()
     {
         var gameState = GetSingleton<GameState>();
-        if (gameState.Value != GameStates.InGame && gameState.IsSheildOn)
+        if (gameState.Value != GameStates.InGame)
+            return;
+
+        if (gameState.IsSheildOn)
             return;
 
         var shieldSpawner = GetSingleton<ShieldSpawner>();

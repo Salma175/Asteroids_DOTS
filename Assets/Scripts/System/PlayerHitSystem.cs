@@ -58,19 +58,26 @@ partial class PlayerHitSystem : SystemBase
 
         public void Execute(TriggerEvent triggerEvent)
         {
+            #region CAUGHT SHIELD POWER UP
+            bool isShieldPowerUp = DisPlayerCatchShieldPowerUp(triggerEvent.EntityA, triggerEvent.EntityB);
+
+            if (isShieldPowerUp)
+            {
+                UpdateGameShieldState();
+            }
+            #endregion
+
+            if (gameState.IsSheildOn)
+                return;
+
+            #region HIT BY ENEMY
             var (isPlayerHitbyEnemy, translation) = IsPlayerHitByEnemy(triggerEvent.EntityA, triggerEvent.EntityB);
 
             if (isPlayerHitbyEnemy)
             {
                 OnPlayerHitByEnemy(translation);
             }
-
-            bool didPlayerCatchShieldPowerUp = DisPlayerCatchShieldPowerUp(triggerEvent.EntityA, triggerEvent.EntityB);
-
-            if (didPlayerCatchShieldPowerUp)
-            {
-                UpdateGameShieldState();
-            }
+            #endregion
         }
 
         private (bool, float3) IsPlayerHitByEnemy(Entity entityA, Entity entityB)
