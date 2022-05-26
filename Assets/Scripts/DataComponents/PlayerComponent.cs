@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class PlayerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
 {
-    public float RotationSpeed = 2f;
-    public float MoveSpeed = 4f;
-    public float FireRate = 3f;
-    public float FireSpeed = 5f;
-    public GameObject MissilePrefab = null;
+    public GameObject MissilePrefab;
+    public GameObject Sheild;
 
     public void Convert(Entity entity, EntityManager entityManager, GameObjectConversionSystem conversionSystem)
     {
         entityManager.AddComponentData(entity, new Player
         {
-            RotationSpeed = RotationSpeed,
-            MoveSpeed = MoveSpeed,
-            FireRate = FireRate,
-            FireSpeed = FireSpeed,
-            MissilePrefab = MissilePrefab != null ? conversionSystem.GetPrimaryEntity(MissilePrefab) : Entity.Null
+            RotationSpeed = Constants.RotationSpeed,
+            MoveSpeed = Constants.MoveSpeed,
+            FireRate = Constants.FireRate,
+            MissileSpeed = Constants.MissileSpeed,
+            ShieldSpan = Constants.ShieldSpan,
+            MissilePrefab = conversionSystem.GetPrimaryEntity(MissilePrefab),
+            Shield = conversionSystem.GetPrimaryEntity(Sheild)
         });
     }
 

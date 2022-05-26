@@ -6,8 +6,9 @@ using UnityEngine.InputSystem;
 
 public partial class RestartSystem : SystemBase
 {
-    private EntityQuery m_AsteroidsQuery;
-    private EntityQuery m_MissileQuery;
+    private EntityQuery asteroidsQuery;
+    private EntityQuery missileQuery;
+    private EntityQuery shieldQuery;
 
     GameControls gc;
     InputAction start;
@@ -26,15 +27,20 @@ public partial class RestartSystem : SystemBase
         RequireSingletonForUpdate<GameShowState>();
         RequireSingletonForUpdate<Player>();
 
-        m_AsteroidsQuery = GetEntityQuery(new ComponentType[]
+        asteroidsQuery = GetEntityQuery(new ComponentType[]
         {
-                ComponentType.ReadOnly<Asteroid>(), ComponentType.ReadOnly<SpriteRenderer>()
+                ComponentType.ReadOnly<Enemy>(), ComponentType.ReadOnly<SpriteRenderer>()
         });
 
-        m_MissileQuery = GetEntityQuery(new ComponentType[]
+        missileQuery = GetEntityQuery(new ComponentType[]
         {
                 ComponentType.ReadOnly<Missile>(), ComponentType.ReadOnly<SpriteRenderer>()
         });
+
+        shieldQuery = GetEntityQuery(new ComponentType[]
+      {
+                ComponentType.ReadOnly<Shield>(), ComponentType.ReadOnly<SpriteRenderer>()
+      });
     }
 
     private void Start_performed(InputAction.CallbackContext obj)
@@ -52,12 +58,13 @@ public partial class RestartSystem : SystemBase
     {
         var gameState = GetSingleton<GameState>();
         var playerEntity = GetSingletonEntity<Player>();
-        
+
         if (gameState.Value == GameStates.Start)
         {
             // remove all stuff
-            EntityManager.DestroyEntity(m_AsteroidsQuery);
-            EntityManager.DestroyEntity(m_MissileQuery);
+            EntityManager.DestroyEntity(asteroidsQuery);
+            EntityManager.DestroyEntity(missileQuery);
+            EntityManager.DestroyEntity(shieldQuery);
 
             // put the ship back in the center
             EntityManager.SetComponentData(playerEntity, new Translation

@@ -29,7 +29,7 @@ partial class MissileSpawnSystem : SystemBase
 
             EntityManager.SetComponentData(missile, new PhysicsVelocity
             {
-                Linear = math.mul(playerRot.Value, new float3(0f, player.FireSpeed, 0f))
+                Linear = math.mul(playerRot.Value, new float3(0f, player.MissileSpeed, 0f))
             });
 
             m_ElapsedTime = 0;

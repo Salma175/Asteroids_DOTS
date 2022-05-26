@@ -18,6 +18,12 @@ public enum AudioClipType
 
 public static class Constants
 {
+    public const float RotationSpeed = 2f;
+    public const float MoveSpeed = 4f;
+    public const float FireRate = 3f;
+    public const float MissileSpeed = 5f;
+    public const float ShieldSpan = 5f;
+
     public const int Lives = 3;
     public const float SpawnPosX = 10;
     public const float SpawnPosY = 5;
@@ -31,4 +37,8 @@ public static class Constants
     public const float LifeAnchorY = 4.5f;
 
     public const int Zero = 0;
+
+    public const float PowerUpPathVariation = 0.05f;
+    public const float SpanTime = 20f;
+    public const float PowerupSpeed = 1f;
 }

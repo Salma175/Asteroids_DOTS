@@ -37,8 +37,9 @@ partial class PlayerHitSystem : SystemBase
             gameStateEntity = GetSingletonEntity<GameState>(),
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
             translationData = GetComponentDataFromEntity<Translation>(),
-            asteroids = GetComponentDataFromEntity<Asteroid>(),
+            asteroids = GetComponentDataFromEntity<Enemy>(),
             player = GetComponentDataFromEntity<Player>(),
+            shields = GetComponentDataFromEntity<Shield>()
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
 
         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
@@ -51,8 +52,10 @@ partial class PlayerHitSystem : SystemBase
         [ReadOnly] public Entity gameStateEntity;
         public EntityCommandBuffer buffer;
         public ComponentDataFromEntity<Translation> translationData;
-        [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
+        [ReadOnly] public ComponentDataFromEntity<Enemy> asteroids;
         [ReadOnly] public ComponentDataFromEntity<Player> player;
+        [ReadOnly] public ComponentDataFromEntity<Shield> shields;
+
         public void Execute(TriggerEvent triggerEvent)
         {
             var (isPlayerHitbyEnemy, translation) = IsPlayerHitByEnemy(triggerEvent.EntityA, triggerEvent.EntityB);
@@ -61,9 +64,17 @@ partial class PlayerHitSystem : SystemBase
             {
                 OnPlayerHitByEnemy(translation);
             }
+
+            bool didPlayerCatchShieldPowerUp = DisPlayerCatchShieldPowerUp(triggerEvent.EntityA, triggerEvent.EntityB);
+
+            if (didPlayerCatchShieldPowerUp)
+            {
+                UpdateGameShieldState();
+            }
         }
 
-        private (bool,float3) IsPlayerHitByEnemy(Entity entityA, Entity entityB) {
+        private (bool, float3) IsPlayerHitByEnemy(Entity entityA, Entity entityB)
+        {
 
             float3 translation = float3.zero;
 
@@ -74,7 +85,7 @@ partial class PlayerHitSystem : SystemBase
 
             // Ignoring Triggers overlapping other Triggers
             if (isBodyAEnemy && isBodyBEnemy)
-                return (isPlayerHitbyEnemy,translation);
+                return (isPlayerHitbyEnemy, translation);
 
             bool isBodyAPlayer = player.HasComponent(entityA);
             bool isBodyBPlayer = player.HasComponent(entityB);
@@ -93,7 +104,7 @@ partial class PlayerHitSystem : SystemBase
                 isPlayerHitbyEnemy = true;
 
             }
-            return (isPlayerHitbyEnemy,translation);
+            return (isPlayerHitbyEnemy, translation);
         }
 
         private void OnPlayerHitByEnemy(float3 translation)
@@ -102,25 +113,70 @@ partial class PlayerHitSystem : SystemBase
 
             buffer.SetComponent(gameStateEntity, new GameState
             {
-                Value = GameStates.InGame,
+                Value = gameState.Value,
                 Lives = livesLeft,
-                Score = gameState.Score
+                Score = gameState.Score,
+                IsSheildOn = gameState.IsSheildOn
             });
 
             var exp = buffer.Instantiate(explosionPrefab);
             buffer.SetComponent(exp, new Translation { Value = translation });
 
-            var isPlayerDead = livesLeft == Constants.Zero;
-            
-            if (isPlayerDead)
+            if (livesLeft == Constants.Zero)
             {
-                buffer.SetComponent(gameStateEntity, new GameState
-                {
-                    Value = GameStates.Start,
-                    Lives = Constants.Lives,
-                    Score = Constants.Zero
-                });
+                UpdateGameStateOnPlayerDead();
             }
+        }
+
+        private void UpdateGameStateOnPlayerDead() {
+
+            buffer.SetComponent(gameStateEntity, new GameState
+            {
+                Value = GameStates.Start,
+                Lives = Constants.Lives,
+                Score = Constants.Zero,
+                IsSheildOn = false
+            });
+        }
+
+        private bool DisPlayerCatchShieldPowerUp(Entity entityA, Entity entityB)
+        {
+            bool isPlayerHitShield = false;
+
+            bool isBodyAShield = shields.HasComponent(entityA);
+            bool isBodyBShield = shields.HasComponent(entityB);
+
+            // Ignoring Triggers overlapping other Triggers
+            if (isBodyAShield && isBodyBShield)
+                return (isPlayerHitShield);
+
+            bool isBodyAPlayer = player.HasComponent(entityA);
+            bool isBodyBPlayer = player.HasComponent(entityB);
+
+            if (isBodyAShield && isBodyBPlayer)
+            {
+                buffer.DestroyEntity(entityA);
+                isPlayerHitShield = true;
+            }
+
+            if (isBodyBShield && isBodyAPlayer)
+            {
+                buffer.DestroyEntity(entityB);
+                isPlayerHitShield = true;
+
+            }
+            return isPlayerHitShield;
+        }
+
+        private void UpdateGameShieldState()
+        {
+            buffer.SetComponent(gameStateEntity, new GameState
+            {
+                Value = gameState.Value,
+                Lives = gameState.Lives,
+                Score = gameState.Score,
+                IsSheildOn = true
+            });
         }
     }
 }

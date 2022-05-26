@@ -32,7 +32,7 @@ partial class MissileHitSystem : SystemBase
             explosionPrefab = explosions.Prefab,
             buffer = entityCommandBufferSystem.CreateCommandBuffer(),
             translationData = GetComponentDataFromEntity<Translation>(),
-            asteroids = GetComponentDataFromEntity<Asteroid>(),
+            asteroids = GetComponentDataFromEntity<Enemy>(),
             missiles = GetComponentDataFromEntity<Missile>(),
             gameState = GetSingleton<GameState>(),
             gameStateEntity = GetSingletonEntity<GameState>(),
@@ -47,7 +47,7 @@ partial class MissileHitSystem : SystemBase
         public Entity explosionPrefab;
         public EntityCommandBuffer buffer;
         public ComponentDataFromEntity<Translation> translationData;
-        [ReadOnly] public ComponentDataFromEntity<Asteroid> asteroids;
+        [ReadOnly] public ComponentDataFromEntity<Enemy> asteroids;
         [ReadOnly] public ComponentDataFromEntity<Missile> missiles;
         [ReadOnly] public GameState gameState;
         [ReadOnly] public Entity gameStateEntity;
@@ -92,9 +92,10 @@ partial class MissileHitSystem : SystemBase
 
                 buffer.SetComponent(gameStateEntity, new GameState
                 {
-                    Value = GameStates.InGame,
+                    Value = gameState.Value,
                     Lives = gameState.Lives,
-                    Score = (gameState.Score + 1)
+                    Score = (gameState.Score + 1),
+                    IsSheildOn = gameState.IsSheildOn
                 });
                 
             }

@@ -7,15 +7,27 @@ public struct Player : IComponentData
     public float RotationSpeed;
     public float MoveSpeed;
     public float FireRate;
-    public float FireSpeed;
+    public float MissileSpeed;
+    public float ShieldSpan;
     public Entity MissilePrefab;
+    public Entity Shield;
 }
 
+public struct Shield : IComponentData { }
 public struct Missile : IComponentData { }
+public struct Enemy : IComponentData { }
 
-public struct Asteroid : IComponentData { }
+public struct ShieldSpawner : IComponentData
+{
+    public Entity Prefab;
+    public float Speed;
+    public float PathVariation;
+    public float SpawnPosX;
+    public float SpawnPosY;
+    public float SpanTime;
+}
 
-public struct AsteroidSpawner : IComponentData
+public struct EnemySpawner : IComponentData
 {
     public Entity Prefab;
     public float Rate;
@@ -26,7 +38,7 @@ public struct AsteroidSpawner : IComponentData
     public float SpawnPosY;
 }
 
-public struct AsteroidSprite : IBufferElementData
+public struct EnemySprite : IBufferElementData
 {
     public Entity Sprite;
 }
@@ -52,6 +64,7 @@ public struct GameState : IComponentData
     public GameStates Value;
     public int Lives;
     public int Score;
+    public bool IsSheildOn;
 }
 
 public struct GameShowState : IComponentData
@@ -73,3 +86,4 @@ public struct Life : IBufferElementData
 {
     public Entity Value;
 }
+
