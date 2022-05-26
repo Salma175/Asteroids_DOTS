@@ -27,31 +27,34 @@ partial class EnemySpawnerSystem : SystemBase
 
         if (m_ElapsedTime > timeLimit)
         {
-
-            var (pos, velocity) = getTranslationAndVelocity(enemySpawner);
-            var asteroid = EntityManager.Instantiate(enemySpawner.Prefab);
-
-            EntityManager.SetComponentData(asteroid, new Translation
-            {
-                Value = pos
-            });
-
-            EntityManager.SetComponentData(asteroid, new PhysicsVelocity
-            {
-                Linear = velocity
-            });
-
-            /*
-              var enemySpawnerEntity = GetSingletonEntity<EnemySpawner>();
-              var enemySprites = EntityManager.GetBuffer<EnemySprite>(enemySpawnerEntity);
-              var index = UnityEngine.Random.Range(0, enemySprites.Length);
-              var spriteRenderer = EntityManager.GetComponentObject<SpriteRenderer>(asteroid);
-              var spriteEntity = enemySprites[index].Sprite;
-              spriteRenderer.sprite = spriteEntity;
-            */
+            InstantiateEnemy(enemySpawner);
 
             m_ElapsedTime = 0;
         }
+    }
+
+    private void InstantiateEnemy(EnemySpawner enemySpawner)
+    {
+        var (pos, velocity) = getTranslationAndVelocity(enemySpawner);
+        var asteroid = EntityManager.Instantiate(enemySpawner.Prefab);
+
+        EntityManager.SetComponentData(asteroid, new Translation
+        {
+            Value = pos
+        });
+
+        EntityManager.SetComponentData(asteroid, new PhysicsVelocity
+        {
+            Linear = velocity
+        });
+
+        //Replace Sprite
+        var enemySpawnerEntity = GetSingletonEntity<EnemySpawner>();
+        var enemySprites = EntityManager.GetBuffer<EnemySprite>(enemySpawnerEntity);
+        var index = UnityEngine.Random.Range(0, enemySprites.Length);
+        var spriteRenderer = EntityManager.GetComponentObject<SpriteRenderer>(asteroid);
+        var spriteEntity = enemySprites[index].Sprite;
+        spriteRenderer.sprite = EntityManager.GetComponentObject<SpriteRenderer>(spriteEntity).sprite;
     }
 
     private (float3, float3) getTranslationAndVelocity(EnemySpawner asteroidSpawner)

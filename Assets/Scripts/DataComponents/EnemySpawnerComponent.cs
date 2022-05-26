@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class EnemySpawnerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
 {
-    public Sprite[] Sprites;
     public GameObject Prefab;
+    public GameObject[] EnemyPrefabs;
 
     public void Convert(Entity entity, EntityManager entityManager, GameObjectConversionSystem conversionSystem)
     {
@@ -32,15 +32,14 @@ public class EnemySpawnerComponent : MonoBehaviour, IConvertGameObjectToEntity, 
 
         var buffer = entityManager.AddBuffer<EnemySprite>(entity);
 
-        if (Sprites == null)
+        if (EnemyPrefabs == null)
             return;
 
-        foreach (Sprite s in Sprites)
+        foreach (var prefab in EnemyPrefabs)
         {
-            Entity spriteEntity = conversionSystem.GetPrimaryEntity(s);
             buffer.Add(new EnemySprite
             {
-                Sprite = spriteEntity
+                Sprite = conversionSystem.GetPrimaryEntity(prefab)
             });
         }
     }
@@ -48,23 +47,13 @@ public class EnemySpawnerComponent : MonoBehaviour, IConvertGameObjectToEntity, 
     {
         if (Prefab != null)
             referencedPrefabs.Add(Prefab);
-    }
-}
 
-[UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
-class DeclareEnemySpriteReference : GameObjectConversionSystem
-{
-    protected override void OnUpdate()
-    {
-        Entities.ForEach((EnemySpawnerComponent mgr) =>
+        if (EnemyPrefabs == null)
+            return;
+
+        foreach (var prefab in EnemyPrefabs)
         {
-            if (mgr.Sprites == null)
-                return;
-
-            foreach (var s in mgr.Sprites)
-            {
-                DeclareReferencedAsset(s);
-            }
-        });
+            referencedPrefabs.Add(prefab);
+        }
     }
 }
