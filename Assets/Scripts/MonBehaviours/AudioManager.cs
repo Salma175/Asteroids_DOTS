@@ -28,6 +28,8 @@ public class AudioManager : MonoBehaviour
         if (type != AudioClipType.None)
         {
             AudioSource source = GetAudioClip(type);
+            if (source.isPlaying)
+                source.Stop();
             source.Play();
         }
     }

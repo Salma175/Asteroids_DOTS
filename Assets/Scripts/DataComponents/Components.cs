@@ -9,15 +9,21 @@ public struct Player : IComponentData
     public float FireRate;
     public float MissileSpeed;
     public float ShieldSpan;
-    public Entity MissilePrefab;
+    public Entity DefaultMissile;
+    public Entity LaserMissile;
+    public Entity DoubleLaserMissile;
     public Entity Shield;
 }
 
-public struct Shield : IComponentData { }
-public struct Missile : IComponentData { }
+public struct PowerUp : IComponentData {
+    public PowerUpType Type;
+}
+public struct Missile : IComponentData {
+   // public ShotType Type;
+}
 public struct Enemy : IComponentData { }
 
-public struct ShieldSpawner : IComponentData
+public struct PowerUpSpawner : IComponentData
 {
     public Entity Prefab;
     public float Speed;
@@ -38,9 +44,9 @@ public struct EnemySpawner : IComponentData
     public float SpawnPosY;
 }
 
-public struct EnemySprite : IBufferElementData
+public struct EnemySpritePrefab : IBufferElementData
 {
-    public Entity Sprite;
+    public Entity SpritePrefab;
 }
 
 public struct Explosion : IComponentData
@@ -59,9 +65,10 @@ public struct ExplosionSprite : IBufferElementData
     public Entity Sprite;
 }
 
-public struct GameState : IComponentData
+public struct GameParameters : IComponentData
 {
-    public GameStates Value;
+    public GameState State;
+    public ShotType Shot;
     public int Lives;
     public int Score;
     public bool IsSheildOn;
@@ -69,7 +76,7 @@ public struct GameState : IComponentData
 
 public struct GameShowState : IComponentData
 {
-    public GameStates Value;
+    public GameState Value;
 }
 
 public struct GameStateObject : IBufferElementData

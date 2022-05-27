@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 21564733}
   - component: {fileID: 21564732}
   m_Layer: 0
-  m_Name: SpaceBG
+  m_Name: Backround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1000,7 +1000,7 @@ GameObject:
   - component: {fileID: 723464389}
   - component: {fileID: 723464388}
   m_Layer: 0
-  m_Name: ShieldSpawnerEntity
+  m_Name: PowerUpSpawnerEntity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1206,7 +1206,7 @@ GameObject:
   - component: {fileID: 1194748172}
   - component: {fileID: 1194748171}
   m_Layer: 5
-  m_Name: InGameCanvas
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1518,7 +1518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c847fd646e3fa14b9c784de3badac1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MissilePrefab: {fileID: 209404027106855853, guid: 85db8d1f65bea594aa995213073c7b9f, type: 3}
+  DefaultMissilePrefab: {fileID: 209404027106855853, guid: 85db8d1f65bea594aa995213073c7b9f, type: 3}
+  LaserMissilePrefab: {fileID: 209404027106855853, guid: ec5529cb9fb7a744587f95f31ce5f1ec, type: 3}
+  DoubleLaserMissilePrefab: {fileID: 695566005464986665, guid: ff32e51fc19c59249b42bd91b18cbe1a, type: 3}
   Sheild: {fileID: 1405913772}
 --- !u!212 &1379430869
 SpriteRenderer:
@@ -2010,19 +2012,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0685f94ebe19874fbab8ac42284f6c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Sprites:
-  - {fileID: 21300000, guid: d2a362e449c880b4caf1eb0bb13554f0, type: 3}
-  - {fileID: 21300000, guid: 5d0a4d942e335fd46b9d40a762c6dc60, type: 3}
-  - {fileID: 21300000, guid: eb704f8b499605c43874bc67ad14cd48, type: 3}
-  - {fileID: 21300000, guid: 2bbbd552f96da4546bd5ef102de7b8d1, type: 3}
-  - {fileID: 21300000, guid: 4578c68b47f0f3d479c9aab7b97a068e, type: 3}
-  - {fileID: 21300000, guid: eb01f937d4654af4180c0697a363eb80, type: 3}
-  - {fileID: 21300000, guid: d59891f0c96f6c445b809c121b628d8f, type: 3}
-  - {fileID: 21300000, guid: fb4c2ddd8cd182247879a1f3d976b194, type: 3}
-  - {fileID: 21300000, guid: 29d411a3f2443c54f890f68acb7ff9a2, type: 3}
-  - {fileID: 21300000, guid: e0b43649235993e498ace4a796af3fe3, type: 3}
-  - {fileID: 21300000, guid: e0bd2160065c46549b6ef00db91efd64, type: 3}
-  - {fileID: 21300000, guid: bfdd164afbe029e40894f344a19bf0f5, type: 3}
   Prefab: {fileID: 568457224845219186, guid: 088c548c4de046f4e9ac2a41e1dbe2cc, type: 3}
   EnemyPrefabs:
   - {fileID: 568457224845219186, guid: 24910b1290082b24d96d87e5cdd4db27, type: 3}

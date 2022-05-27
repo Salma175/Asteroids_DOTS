@@ -1,6 +1,6 @@
 using System;
 
-public enum GameStates
+public enum GameState
 {
     None,
     Start,
@@ -15,12 +15,30 @@ public enum AudioClipType
     PlayerFire,
 }
 
+public enum ShotType
+{
+    Default,
+    Laser,
+    DoubleLaser,
+}
+
+public enum PowerUpType
+{
+    Shield,
+    Laser,
+    DoubleLaser,
+}
 
 public static class Constants
 {
+    public static class FireRate { 
+        public const float Default = 3f;
+        public const float Laser = 3f;
+        public const float DoubleLaser = 3f;
+    }
+
     public const float RotationSpeed = 2f;
     public const float MoveSpeed = 4f;
-    public const float FireRate = 3f;
     public const float MissileSpeed = 5f;
     public const float ShieldSpan = 20f;
 
