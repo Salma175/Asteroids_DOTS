@@ -82,8 +82,7 @@ public partial class RestartSystem : SystemBase
                 State = GameState.Start,
                 Lives = Constants.Lives,
                 Score = Constants.Zero,
-                IsSheildOn = false,
-                Shot = ShotType.Default
+                PowerUp = PowerUpType.None
             });
         }
     }

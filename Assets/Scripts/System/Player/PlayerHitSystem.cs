@@ -38,7 +38,7 @@ partial class PlayerHitSystem : SystemBase
             translationData = GetComponentDataFromEntity<Translation>(),
             asteroids = GetComponentDataFromEntity<Enemy>(),
             player = GetComponentDataFromEntity<Player>(),
-            shields = GetComponentDataFromEntity<PowerUp>(),
+            powerUps = GetComponentDataFromEntity<PowerUp>(),
             gameParamsEntity = GetSingletonEntity<GameParameters>(),
             gameParams = GetSingleton<GameParameters>()
         }.Schedule(stepPhysicsWorld.Simulation, Dependency);
@@ -54,21 +54,16 @@ partial class PlayerHitSystem : SystemBase
         public ComponentDataFromEntity<Translation> translationData;
         [ReadOnly] public ComponentDataFromEntity<Enemy> asteroids;
         [ReadOnly] public ComponentDataFromEntity<Player> player;
-        [ReadOnly] public ComponentDataFromEntity<PowerUp> shields;
+        [ReadOnly] public ComponentDataFromEntity<PowerUp> powerUps;
         [ReadOnly] public Entity gameParamsEntity;
         [ReadOnly] public GameParameters gameParams;
         public void Execute(TriggerEvent triggerEvent)
         {
-            #region CAUGHT SHIELD POWER UP
-            bool isShieldPowerUp = DisPlayerCatchShieldPowerUp(triggerEvent.EntityA, triggerEvent.EntityB);
-
-            if (isShieldPowerUp)
-            {
-                UpdateShieldState();
-            }
+            #region CAUGHT POWER UP
+            CheckIfPowerUpAndUpdateParams(triggerEvent.EntityA, triggerEvent.EntityB);
             #endregion
 
-            if (gameState.IsSheildOn)
+            if (gameState.PowerUp == PowerUpType.Shield)
                 return;
 
             #region HIT BY ENEMY
@@ -131,38 +126,37 @@ partial class PlayerHitSystem : SystemBase
             }
         }
 
-        private bool DisPlayerCatchShieldPowerUp(Entity entityA, Entity entityB)
+        private void CheckIfPowerUpAndUpdateParams(Entity entityA, Entity entityB)
         {
-            bool isPlayerHitShield = false;
-
-            bool isBodyAShield = shields.HasComponent(entityA);
-            bool isBodyBShield = shields.HasComponent(entityB);
+            bool isBodyAPowerUp = powerUps.HasComponent(entityA);
+            bool isBodyBPowerUp = powerUps.HasComponent(entityB);
 
             // Ignoring Triggers overlapping other Triggers
-            if (isBodyAShield && isBodyBShield)
-                return (isPlayerHitShield);
+            if (isBodyAPowerUp && isBodyBPowerUp)
+                return;
 
             bool isBodyAPlayer = player.HasComponent(entityA);
             bool isBodyBPlayer = player.HasComponent(entityB);
 
-            if (isBodyAShield && isBodyBPlayer)
+            if (isBodyAPowerUp && isBodyBPlayer)
             {
+                ApplyPowerUp(powerUps[entityA].Type);
                 buffer.DestroyEntity(entityA);
-                isPlayerHitShield = true;
             }
 
-            if (isBodyBShield && isBodyAPlayer)
+            if (isBodyBPowerUp && isBodyAPlayer)
             {
+                ApplyPowerUp(powerUps[entityB].Type);
                 buffer.DestroyEntity(entityB);
-                isPlayerHitShield = true;
-
             }
-            return isPlayerHitShield;
         }
 
-        private void UpdateShieldState() {
+        #region UPDATING GAME PARAMS
+
+        private void ApplyPowerUp(PowerUpType type) {
+            Debug.Log("Power Up "+ type.ToString());
             var newParams = gameParams;
-            newParams.IsSheildOn = true;
+            newParams.PowerUp = type;
             buffer.SetComponent(gameParamsEntity, newParams);
         }
 
@@ -179,5 +173,6 @@ partial class PlayerHitSystem : SystemBase
             newParams.State = GameState.Start;
             buffer.SetComponent(gameParamsEntity, newParams);
         }
+        #endregion
     }
 }

@@ -3,6 +3,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 partial class PowerUpSpawnerSystem: SystemBase
 {
@@ -20,18 +21,17 @@ partial class PowerUpSpawnerSystem: SystemBase
         if (gameState.State != GameState.InGame)
             return;
 
-        if (gameState.IsSheildOn)
+        if (gameState.PowerUp != PowerUpType.None)
             return;
 
-        var shieldSpawner = GetSingleton<PowerUpSpawner>();
+        var powerUpSpawner = GetSingleton<PowerUpSpawner>();
 
         m_ElapsedTime += Time.DeltaTime;
-
-        if (m_ElapsedTime > shieldSpawner.SpanTime)
+        if (m_ElapsedTime > powerUpSpawner.SpanTime)
         {
 
-            var (pos, velocity) = getTranslationAndVelocity(shieldSpawner);
-            var asteroid = EntityManager.Instantiate(shieldSpawner.Prefab);
+            var (pos, velocity) = getTranslationAndVelocity(powerUpSpawner);
+            var asteroid = EntityManager.Instantiate(GetPrefab());
 
             EntityManager.SetComponentData(asteroid, new Translation
             {
@@ -43,6 +43,20 @@ partial class PowerUpSpawnerSystem: SystemBase
                 Linear = velocity
             });
             m_ElapsedTime = 0;
+        }
+    }
+
+    private Entity GetPrefab() {
+        var powerUpSpawner = GetSingleton<PowerUpSpawner>();
+        int randInt = Random.Range(0,3);
+        switch (randInt)
+        {
+            case 1:
+                return powerUpSpawner.LaserPrefab;
+            case 2:
+                return powerUpSpawner.DoubleLaserPrefab;
+            default:
+                return powerUpSpawner.ShieldPrefab;
         }
     }
 

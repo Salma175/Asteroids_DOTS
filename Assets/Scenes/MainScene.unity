@@ -1018,7 +1018,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a204a751768ca784eb200f6f7967ad59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 568457224845219186, guid: edcae28a626764a4abee8f953a633f66, type: 3}
+  ShieldPrefab: {fileID: 568457224845219186, guid: edcae28a626764a4abee8f953a633f66, type: 3}
+  LaserPrefab: {fileID: 568457224845219186, guid: e38b6afab13b24b4c85c1171e5e12e0f, type: 3}
+  DoubleLaserPrefab: {fileID: 568457224845219186, guid: 6401218b5aec9a449b421d11e33f53f4, type: 3}
 --- !u!114 &723464389
 MonoBehaviour:
   m_ObjectHideFlags: 0

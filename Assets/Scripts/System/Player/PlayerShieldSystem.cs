@@ -20,16 +20,19 @@ partial class PlayerShieldSystem : SystemBase
         if (gameState.State != GameState.InGame)
             return;
 
-        if (gameState.IsSheildOn)
+        if (gameState.PowerUp != PowerUpType.None)
         {
             var player = GetSingleton<Player>();
 
-            EnableShieldEnity(player);
+            if(gameState.PowerUp == PowerUpType.Shield)
+                EnableShieldEnity(player);
 
             m_ElapsedTime += Time.DeltaTime;
             if (m_ElapsedTime > player.ShieldSpan)
             {
-                DisbaleShieldEntity(player);
+                if (gameState.PowerUp == PowerUpType.Shield)
+                    DisbaleShieldEntity(player);
+                DisablePowerUp();
             }
         }
     }
@@ -40,13 +43,15 @@ partial class PlayerShieldSystem : SystemBase
         if (isDisabled) EntityManager.RemoveComponent<Disabled>(player.Shield);
     }
 
-    private void DisbaleShieldEntity(Player player)
-    {
+    private void DisablePowerUp() {
         var gameParamsEntity = GetSingletonEntity<GameParameters>();
         var gameParams = GetSingleton<GameParameters>();
-        gameParams.IsSheildOn = false;
+        gameParams.PowerUp = PowerUpType.None;
         EntityManager.SetComponentData(gameParamsEntity, gameParams);
+    }
 
+    private void DisbaleShieldEntity(Player player)
+    {
         EntityManager.AddComponent<Disabled>(player.Shield);
         m_ElapsedTime = 0;
     }

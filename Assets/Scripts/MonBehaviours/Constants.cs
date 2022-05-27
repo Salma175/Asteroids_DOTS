@@ -15,15 +15,9 @@ public enum AudioClipType
     PlayerFire,
 }
 
-public enum ShotType
-{
-    Default,
-    Laser,
-    DoubleLaser,
-}
-
 public enum PowerUpType
 {
+    None,
     Shield,
     Laser,
     DoubleLaser,
@@ -45,9 +39,9 @@ public static class Constants
     public const int Lives = 3;
     public const float SpawnPosX = 10;
     public const float SpawnPosY = 5;
-    public const float SpawnRate = 1.5f;
+    public const float SpawnRate = 1f;
     public const float MinSpeed = 1f;
-    public const float MaxSpeed = 4f;
+    public const float MaxSpeed = 3f;
     public const float PathVariation = 0.1f;
 
 

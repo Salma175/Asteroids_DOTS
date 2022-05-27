@@ -38,11 +38,11 @@ partial class MissileSpawnSystem : SystemBase
     }
 
     private Entity GetMissiblePrefab(GameParameters gameState, Player player) {
-        switch (gameState.Shot)
+        switch (gameState.PowerUp)
         {
-            case ShotType.Laser:
+            case PowerUpType.Laser:
                 return player.LaserMissile;
-            case ShotType.DoubleLaser:
+            case PowerUpType.DoubleLaser:
                 return player.DoubleLaserMissile;
             default:
                 return player.DefaultMissile;

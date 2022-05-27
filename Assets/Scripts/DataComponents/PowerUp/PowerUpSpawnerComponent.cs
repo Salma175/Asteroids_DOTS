@@ -5,13 +5,17 @@ using UnityEngine;
 
 public class PowerUpSpawnerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
 {
-    public GameObject Prefab;
+    public GameObject ShieldPrefab;
+    public GameObject LaserPrefab;
+    public GameObject DoubleLaserPrefab;
 
     public void Convert(Entity entity, EntityManager entityManager, GameObjectConversionSystem conversionSystem)
     {
         entityManager.AddComponentData(entity, new PowerUpSpawner
         {
-            Prefab = conversionSystem.GetPrimaryEntity(Prefab),
+            ShieldPrefab = conversionSystem.GetPrimaryEntity(ShieldPrefab),
+            LaserPrefab = conversionSystem.GetPrimaryEntity(LaserPrefab),
+            DoubleLaserPrefab = conversionSystem.GetPrimaryEntity(DoubleLaserPrefab),
             Speed = Constants.PowerupSpeed,
             PathVariation = Constants.PowerUpPathVariation,
             SpawnPosX = Constants.SpawnPosX,
@@ -22,7 +26,11 @@ public class PowerUpSpawnerComponent : MonoBehaviour, IConvertGameObjectToEntity
     }
     public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
     {
-        if (Prefab != null)
-            referencedPrefabs.Add(Prefab);
+        if (ShieldPrefab != null)
+            referencedPrefabs.Add(ShieldPrefab);
+        if (LaserPrefab != null)
+            referencedPrefabs.Add(LaserPrefab);
+        if (DoubleLaserPrefab != null)
+            referencedPrefabs.Add(DoubleLaserPrefab);
     }
 }

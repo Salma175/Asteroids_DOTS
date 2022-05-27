@@ -25,7 +25,9 @@ public struct Enemy : IComponentData { }
 
 public struct PowerUpSpawner : IComponentData
 {
-    public Entity Prefab;
+    public Entity ShieldPrefab;
+    public Entity LaserPrefab;
+    public Entity DoubleLaserPrefab;
     public float Speed;
     public float PathVariation;
     public float SpawnPosX;
@@ -68,10 +70,9 @@ public struct ExplosionSprite : IBufferElementData
 public struct GameParameters : IComponentData
 {
     public GameState State;
-    public ShotType Shot;
     public int Lives;
     public int Score;
-    public bool IsSheildOn;
+    public PowerUpType PowerUp;
 }
 
 public struct GameShowState : IComponentData

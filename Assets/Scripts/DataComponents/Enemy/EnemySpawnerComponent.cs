@@ -27,8 +27,7 @@ public class EnemySpawnerComponent : MonoBehaviour, IConvertGameObjectToEntity, 
             State = GameState.Start,
             Lives = Constants.Lives,
             Score = Constants.Zero,
-            IsSheildOn = false,
-            Shot = ShotType.Default
+            PowerUp = PowerUpType.None
         });
 
         var buffer = entityManager.AddBuffer<EnemySpritePrefab>(entity);
