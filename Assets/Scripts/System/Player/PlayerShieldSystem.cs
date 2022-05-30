@@ -15,24 +15,22 @@ partial class PlayerShieldSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        var gameState = GetSingleton<GameParameters>();
+        var gameParams = GetSingleton<GameParameters>();
 
-        if (gameState.State != GameState.InGame)
+        if (gameParams.State != GameState.InGame)
             return;
 
-        if (gameState.PowerUp == PowerUpType.None)
+        if (gameParams.PowerUp == PowerUpType.None)
             return;
        
         var player = GetSingleton<Player>();
 
-        if (gameState.PowerUp == PowerUpType.Shield)
+        if (gameParams.PowerUp == PowerUpType.Shield)
             EnableShieldEnity(player);
 
         m_ElapsedTime += Time.DeltaTime;
         if (m_ElapsedTime > player.PowerUpSpan)
         {
-            if (gameState.PowerUp == PowerUpType.Shield)
-                DisbaleShieldEntity(player);
             DisablePowerUp();
         }
     }
@@ -49,15 +47,21 @@ partial class PlayerShieldSystem : SystemBase
     {
         var gameParamsEntity = GetSingletonEntity<GameParameters>();
         var gameParams = GetSingleton<GameParameters>();
-        gameParams.PowerUp = PowerUpType.None;
-        EntityManager.SetComponentData(gameParamsEntity, gameParams);
+
+        if (gameParams.PowerUp == PowerUpType.Shield)
+            DisbaleShieldEntity();
+
+        var newParams = gameParams;
+        newParams.PowerUp = PowerUpType.None;
+        EntityManager.SetComponentData(gameParamsEntity, newParams);
 
         EventManager.PlayAudioEvent?.Invoke(AudioClipType.ShieldDown);
+        m_ElapsedTime = 0;
     }
 
-    private void DisbaleShieldEntity(Player player)
+    private void DisbaleShieldEntity()
     {
+        var player = GetSingleton<Player>();
         EntityManager.AddComponent<Disabled>(player.Shield);
-        m_ElapsedTime = 0;
     }
 }

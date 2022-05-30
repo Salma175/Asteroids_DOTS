@@ -60,8 +60,7 @@ partial class PlayerHitSystem : SystemBase
         public void Execute(TriggerEvent triggerEvent)
         {
             #region CAUGHT POWER UP
-            bool isPowerUp = CheckIfPowerUpAndUpdateParams(triggerEvent.EntityA, triggerEvent.EntityB);
-            if (isPowerUp) return;
+            if(CheckIfPowerUpAndUpdateParams(triggerEvent.EntityA, triggerEvent.EntityB)) return;
             #endregion
 
             if (gameState.PowerUp == PowerUpType.Shield)
@@ -152,8 +151,8 @@ partial class PlayerHitSystem : SystemBase
             if (powerUpEntity != Entity.Null)
             {
                 PowerUpType type = powerUps[powerUpEntity].Type;
-                ApplyPowerUp(type);
                 buffer.DestroyEntity(powerUpEntity);
+                ApplyPowerUp(type);
                 return true;
             }
             return false;
@@ -166,7 +165,6 @@ partial class PlayerHitSystem : SystemBase
             var newParams = gameParams;
             newParams.PowerUp = type;
             buffer.SetComponent(gameParamsEntity, newParams);
-            Debug.Log("Power Up " + type.ToString());
         }
 
         private void UpdateLives(int lives)

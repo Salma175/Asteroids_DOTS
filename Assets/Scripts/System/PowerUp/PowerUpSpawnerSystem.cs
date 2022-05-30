@@ -60,19 +60,19 @@ partial class PowerUpSpawnerSystem: SystemBase
         }
     }
 
-    private (float3, float3) getTranslationAndVelocity(PowerUpSpawner asteroidSpawner)
+    private (float3, float3) getTranslationAndVelocity(PowerUpSpawner powerUpSpawner)
     {
 
         // find a point somewhere outside of view,
         var rot = quaternion.RotateZ(random.NextFloat(2 * math.PI));
-        var pos = new float3(asteroidSpawner.SpawnPosX, asteroidSpawner.SpawnPosX, 0);
+        var pos = new float3(powerUpSpawner.SpawnPosX, powerUpSpawner.SpawnPosX, 0);
 
         pos = math.mul(rot, pos);
 
-        var dir = math.normalize(float3.zero - pos) * asteroidSpawner.Speed;
+        var dir = math.normalize(float3.zero - pos) * powerUpSpawner.Speed;
 
         // vary the aim by a a little to miss the center
-        rot = quaternion.RotateZ(random.NextFloat(asteroidSpawner.PathVariation * 2 * math.PI)); // 10% variation
+        rot = quaternion.RotateZ(random.NextFloat(powerUpSpawner.PathVariation * 2 * math.PI)); // 10% variation
 
         var velocity = math.mul(rot, dir);
 
