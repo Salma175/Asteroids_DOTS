@@ -24,7 +24,7 @@ public partial class RestartSystem : SystemBase
         start.performed += Start_performed;
 
         RequireSingletonForUpdate<GameParameters>();
-        RequireSingletonForUpdate<GameShowState>();
+        RequireSingletonForUpdate<GameStateData>();
         RequireSingletonForUpdate<Player>();
 
         asteroidsQuery = GetEntityQuery(new ComponentType[]

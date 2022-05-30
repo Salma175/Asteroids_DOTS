@@ -59,4 +59,6 @@ public static class Constants
     public const float PowerUpPathVariation = 0.05f;
     public const float SpanTime = 20f;
     public const float PowerupSpeed = 1f;
+
+    public const float ExplotionSpan = 0.1f;
 }

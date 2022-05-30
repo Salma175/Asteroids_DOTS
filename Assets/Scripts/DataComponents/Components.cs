@@ -1,7 +1,6 @@
-using System;
 using Unity.Entities;
-using UnityEngine;
 
+#region PLAYER
 public struct Player : IComponentData
 {
     public float RotationSpeed;
@@ -15,13 +14,14 @@ public struct Player : IComponentData
     public Entity Shield;
 }
 
-public struct PowerUp : IComponentData {
+public struct Missile : IComponentData { }
+#endregion
+
+#region POWER UP
+public struct PowerUp : IComponentData
+{
     public PowerUpType Type;
 }
-public struct Missile : IComponentData {
-   // public ShotType Type;
-}
-public struct Enemy : IComponentData { }
 
 public struct PowerUpSpawner : IComponentData
 {
@@ -34,6 +34,10 @@ public struct PowerUpSpawner : IComponentData
     public float SpawnPosY;
     public float SpanTime;
 }
+#endregion
+
+#region ENEMY
+public struct Enemy : IComponentData { }
 
 public struct EnemySpawner : IComponentData
 {
@@ -50,23 +54,21 @@ public struct EnemySpritePrefab : IBufferElementData
 {
     public Entity SpritePrefab;
 }
+#endregion
 
-public struct Explosion : IComponentData
-{
+#region EXPLOSION
+public struct Explosion : IComponentData {
     public float Timer;
 }
 
 public struct ExplosionSpawner : IComponentData
 {
     public Entity Prefab;
-    public float TimePerSprite;
+    public float ExplotionSpan;
 }
+#endregion
 
-public struct ExplosionSprite : IBufferElementData
-{
-    public Entity Sprite;
-}
-
+#region GAME SPECIFIC
 public struct GameParameters : IComponentData
 {
     public GameState State;
@@ -75,23 +77,25 @@ public struct GameParameters : IComponentData
     public PowerUpType PowerUp;
 }
 
-public struct GameShowState : IComponentData
+public struct GameStateData : IComponentData
 {
-    public GameState Value;
+    public GameState State;
 }
 
 public struct GameStateObject : IBufferElementData
 {
     public Entity Value;
 }
+#endregion
 
-public struct LifeManager : IComponentData
+#region PLAYER HEALTH
+public struct HealthManager : IComponentData
 {
-    public Entity LifePrefab;
+    public Entity HealthPrefab;
 }
 
-public struct Life : IBufferElementData
+public struct Health : IBufferElementData
 {
     public Entity Value;
 }
-
+#endregion

@@ -22,11 +22,11 @@ partial class GameStateUISystem : SystemBase
         var ecbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         var cmdBuffer = ecbSystem.CreateCommandBuffer().AsParallelWriter();
 
-        Dependency = Entities.ForEach((Entity entity, int entityInQueryIndex, in GameShowState showState, in DynamicBuffer<GameStateObject> gameStateObjects) =>
+        Dependency = Entities.ForEach((Entity entity, int entityInQueryIndex, in GameStateData showState, in DynamicBuffer<GameStateObject> gameStateObjects) =>
         {
             for (var i = 0; i < gameStateObjects.Length; i++)
             {
-                var isVisible = gameState.State == showState.Value;
+                var isVisible = gameState.State == showState.State;
 
                 if (isVisible)
                 {

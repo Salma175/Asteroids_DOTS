@@ -13,7 +13,7 @@ public partial class LifeSystem : SystemBase
     protected override void OnCreate()
     {
         base.OnCreate();
-        RequireSingletonForUpdate<LifeManager>();
+        RequireSingletonForUpdate<HealthManager>();
         RequireSingletonForUpdate<GameParameters>();
     }
 
@@ -80,8 +80,8 @@ public partial class LifeSystem : SystemBase
     
     private void DestroyLifes()
     {
-        var lifeManagerEntity = GetSingletonEntity<LifeManager>();
-        var lifeBuffers = GetBufferFromEntity<Life>();
+        var lifeManagerEntity = GetSingletonEntity<HealthManager>();
+        var lifeBuffers = GetBufferFromEntity<Health>();
         if (!lifeBuffers.HasComponent(lifeManagerEntity))
             return;
 
@@ -95,12 +95,12 @@ public partial class LifeSystem : SystemBase
     private void SpawnLifes()
     {
         var gameState = GetSingleton<GameParameters>();
-        var lifeManager = GetSingleton<LifeManager>();
-        var lifeManagerEntity = GetSingletonEntity<LifeManager>();
+        var lifeManager = GetSingleton<HealthManager>();
+        var lifeManagerEntity = GetSingletonEntity<HealthManager>();
 
         var lifeAnchor = new float3(Constants.LifeAnchorX,Constants.LifeAnchorY,0);
 
-        var lifeBuffer = cmdBuffer.AddBuffer<Life>(lifeManagerEntity);
+        var lifeBuffer = cmdBuffer.AddBuffer<Health>(lifeManagerEntity);
 
         for (var i = 0; i < gameState.Lives; i++)
         {
@@ -109,11 +109,11 @@ public partial class LifeSystem : SystemBase
                 Value = lifeAnchor
             };
 
-            var life = cmdBuffer.Instantiate(lifeManager.LifePrefab);
+            var life = cmdBuffer.Instantiate(lifeManager.HealthPrefab);
 
             cmdBuffer.SetComponent(life, translation);
 
-            lifeBuffer.Add(new Life()
+            lifeBuffer.Add(new Health()
             {
                 Value = life
             });
@@ -126,8 +126,8 @@ public partial class LifeSystem : SystemBase
 
     private void LifeReduction(int m_lives)
     {
-        var lifeManagerEntity = GetSingletonEntity<LifeManager>();
-        var lifeBuffers = GetBufferFromEntity<Life>();
+        var lifeManagerEntity = GetSingletonEntity<HealthManager>();
+        var lifeBuffers = GetBufferFromEntity<Health>();
 
         var lives = lifeBuffers[lifeManagerEntity];
         cmdBuffer.AddComponent<Disabled>(lives[m_lives].Value);

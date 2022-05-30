@@ -10,9 +10,9 @@ public class GameStateComponent : MonoBehaviour, IConvertGameObjectToEntity
         if (GameStateObjects == null)
             return;
 
-        dstManager.AddComponentData(entity, new GameShowState
+        dstManager.AddComponentData(entity, new GameStateData
         {
-            Value = ShowingState,
+            State = ShowingState,
         });
 
         var gameStateObjects = dstManager.AddBuffer<GameStateObject>(entity);

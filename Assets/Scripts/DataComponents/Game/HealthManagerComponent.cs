@@ -4,14 +4,14 @@ using TMPro;
 using Unity.Entities;
 using UnityEngine;
 
-public class LifeManagerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
+public class HealthManagerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
 {
     public GameObject lifePrefab;
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
-        dstManager.AddComponentData(entity, new LifeManager()
+        dstManager.AddComponentData(entity, new HealthManager()
         {
-            LifePrefab = conversionSystem.GetPrimaryEntity(lifePrefab),
+            HealthPrefab = conversionSystem.GetPrimaryEntity(lifePrefab),
         });
     }
 

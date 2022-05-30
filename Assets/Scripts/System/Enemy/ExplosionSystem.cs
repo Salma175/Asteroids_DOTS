@@ -13,7 +13,6 @@ partial class ExplosionSystem : SystemBase
     {
         var explosions = GetSingleton<ExplosionSpawner>();
         var explosionsEntity = GetSingletonEntity<ExplosionSpawner>();
-        var explosionSprites = EntityManager.GetBuffer<ExplosionSprite>(explosionsEntity);
 
         var ecbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         var ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
@@ -25,22 +24,15 @@ partial class ExplosionSystem : SystemBase
         }).Schedule(Dependency);
 
         Entities
-            .WithReadOnly(explosionSprites)
             .WithoutBurst()
             .ForEach((
                 Entity e,
                 int entityInQueryIndex,
-                SpriteRenderer sr,
                 in Explosion explosion) =>
             {
-                var activeSprite = (int)(explosion.Timer / explosions.TimePerSprite);
-                if (activeSprite >= explosionSprites.Length)
+                if (explosion.Timer >= explosions.ExplotionSpan)
                 {
                     ecb.DestroyEntity(entityInQueryIndex, e);
-                }
-                else
-                {
-                    // sr.sprite = explosionSprites[activeSprite].Sprite;
                 }
             }).Run();
 
