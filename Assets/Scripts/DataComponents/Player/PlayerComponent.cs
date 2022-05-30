@@ -18,7 +18,7 @@ public class PlayerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDecla
             MoveSpeed = Constants.MoveSpeed,
             FireRate = Constants.FireRate.Default,
             MissileSpeed = Constants.MissileSpeed,
-            ShieldSpan = Constants.ShieldSpan,
+            PowerUpSpan = Constants.ShieldSpan,
             DefaultMissile = conversionSystem.GetPrimaryEntity(DefaultMissilePrefab),
             LaserMissile = conversionSystem.GetPrimaryEntity(LaserMissilePrefab),
             DoubleLaserMissile = conversionSystem.GetPrimaryEntity(DoubleLaserMissilePrefab),

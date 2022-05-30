@@ -4,6 +4,8 @@ using Unity.Transforms;
 public partial class LifeSystem : SystemBase
 {
     private GameState currentGameState = GameState.None;
+    private PowerUpType currentPowerUp = PowerUpType.None;
+
     private int noOfLives = -1;
     private EntityCommandBuffer cmdBuffer;
     private int score = -1;
@@ -30,13 +32,18 @@ public partial class LifeSystem : SystemBase
         if (gameState.Score != score) {
             GameScoreChange(gameState.Score);
         }
+        if (gameState.PowerUp != currentPowerUp)
+        {
+            GamePowrUpChange(gameState.PowerUp);
+        }
     }
 
     private void GameStateChangeUpdate(GameState m_currentGameState)
     {
         if (m_currentGameState == GameState.Start)
         {
-            DestroyLife();
+            DestroyLifes();
+            ResetVars();
             EventManager.HandleGameUIEvent?.Invoke(false);
         }
         else if (m_currentGameState == GameState.InGame)
@@ -53,7 +60,25 @@ public partial class LifeSystem : SystemBase
         score = m_score;
         EventManager.PlayAudioEvent?.Invoke(AudioClipType.AsteroidExplosion);
     }
-    private void DestroyLife()
+
+    private void GamePowrUpChange(PowerUpType type)
+    {
+        switch (type)
+        {
+            case PowerUpType.Laser:
+                EventManager.PlayAudioEvent?.Invoke(AudioClipType.LaserPowerUp);
+                break;
+            case PowerUpType.DoubleLaser:
+                EventManager.PlayAudioEvent?.Invoke(AudioClipType.DoubleLaserPowerUp);
+                break;
+            case PowerUpType.Shield:
+                EventManager.PlayAudioEvent?.Invoke(AudioClipType.ShieldUp);
+                break;
+        }
+        currentPowerUp = type;
+    }
+    
+    private void DestroyLifes()
     {
         var lifeManagerEntity = GetSingletonEntity<LifeManager>();
         var lifeBuffers = GetBufferFromEntity<Life>();
@@ -109,5 +134,13 @@ public partial class LifeSystem : SystemBase
 
         noOfLives = m_lives;
         EventManager.PlayAudioEvent?.Invoke(AudioClipType.PlayerExplosion);
+    }
+
+    private void ResetVars()
+    {
+        currentGameState = GameState.None;
+        currentPowerUp = PowerUpType.None;
+        noOfLives = -1;
+        score = -1;
     }
 }

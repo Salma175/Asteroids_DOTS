@@ -20,34 +20,39 @@ partial class PlayerShieldSystem : SystemBase
         if (gameState.State != GameState.InGame)
             return;
 
-        if (gameState.PowerUp != PowerUpType.None)
+        if (gameState.PowerUp == PowerUpType.None)
+            return;
+       
+        var player = GetSingleton<Player>();
+
+        if (gameState.PowerUp == PowerUpType.Shield)
+            EnableShieldEnity(player);
+
+        m_ElapsedTime += Time.DeltaTime;
+        if (m_ElapsedTime > player.PowerUpSpan)
         {
-            var player = GetSingleton<Player>();
-
-            if(gameState.PowerUp == PowerUpType.Shield)
-                EnableShieldEnity(player);
-
-            m_ElapsedTime += Time.DeltaTime;
-            if (m_ElapsedTime > player.ShieldSpan)
-            {
-                if (gameState.PowerUp == PowerUpType.Shield)
-                    DisbaleShieldEntity(player);
-                DisablePowerUp();
-            }
+            if (gameState.PowerUp == PowerUpType.Shield)
+                DisbaleShieldEntity(player);
+            DisablePowerUp();
         }
     }
 
     private void EnableShieldEnity(Player player)
     {
         bool isDisabled = EntityManager.HasComponent<Disabled>(player.Shield);
-        if (isDisabled) EntityManager.RemoveComponent<Disabled>(player.Shield);
+        if (isDisabled) { 
+            EntityManager.RemoveComponent<Disabled>(player.Shield);
+        }
     }
 
-    private void DisablePowerUp() {
+    private void DisablePowerUp()
+    {
         var gameParamsEntity = GetSingletonEntity<GameParameters>();
         var gameParams = GetSingleton<GameParameters>();
         gameParams.PowerUp = PowerUpType.None;
         EntityManager.SetComponentData(gameParamsEntity, gameParams);
+
+        EventManager.PlayAudioEvent?.Invoke(AudioClipType.ShieldDown);
     }
 
     private void DisbaleShieldEntity(Player player)

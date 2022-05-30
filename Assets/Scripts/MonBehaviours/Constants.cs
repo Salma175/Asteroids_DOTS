@@ -12,7 +12,13 @@ public enum AudioClipType
     None,
     AsteroidExplosion,
     PlayerExplosion,
-    PlayerFire,
+    FireDefault,
+    FireLaser,
+    FireDoubleLaser,
+    ShieldUp,
+    ShieldDown,
+    LaserPowerUp,
+    DoubleLaserPowerUp
 }
 
 public enum PowerUpType

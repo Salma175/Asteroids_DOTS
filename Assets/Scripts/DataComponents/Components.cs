@@ -8,7 +8,7 @@ public struct Player : IComponentData
     public float MoveSpeed;
     public float FireRate;
     public float MissileSpeed;
-    public float ShieldSpan;
+    public float PowerUpSpan;
     public Entity DefaultMissile;
     public Entity LaserMissile;
     public Entity DoubleLaserMissile;

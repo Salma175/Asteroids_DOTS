@@ -60,7 +60,8 @@ partial class PlayerHitSystem : SystemBase
         public void Execute(TriggerEvent triggerEvent)
         {
             #region CAUGHT POWER UP
-            CheckIfPowerUpAndUpdateParams(triggerEvent.EntityA, triggerEvent.EntityB);
+            bool isPowerUp = CheckIfPowerUpAndUpdateParams(triggerEvent.EntityA, triggerEvent.EntityB);
+            if (isPowerUp) return;
             #endregion
 
             if (gameState.PowerUp == PowerUpType.Shield)
@@ -122,42 +123,50 @@ partial class PlayerHitSystem : SystemBase
             //Player Dead
             if (livesLeft == Constants.Zero)
             {
-               UpdateGameState();
+                UpdateGameState();
             }
         }
 
-        private void CheckIfPowerUpAndUpdateParams(Entity entityA, Entity entityB)
+        private bool CheckIfPowerUpAndUpdateParams(Entity entityA, Entity entityB)
         {
             bool isBodyAPowerUp = powerUps.HasComponent(entityA);
             bool isBodyBPowerUp = powerUps.HasComponent(entityB);
 
             // Ignoring Triggers overlapping other Triggers
             if (isBodyAPowerUp && isBodyBPowerUp)
-                return;
+                return false;
 
             bool isBodyAPlayer = player.HasComponent(entityA);
             bool isBodyBPlayer = player.HasComponent(entityB);
 
+            Entity powerUpEntity = Entity.Null;
             if (isBodyAPowerUp && isBodyBPlayer)
             {
-                ApplyPowerUp(powerUps[entityA].Type);
-                buffer.DestroyEntity(entityA);
+                powerUpEntity = entityA;
             }
-
             if (isBodyBPowerUp && isBodyAPlayer)
             {
-                ApplyPowerUp(powerUps[entityB].Type);
-                buffer.DestroyEntity(entityB);
+                powerUpEntity = entityB;
             }
+
+            if (powerUpEntity != Entity.Null)
+            {
+                PowerUpType type = powerUps[powerUpEntity].Type;
+                ApplyPowerUp(type);
+                buffer.DestroyEntity(powerUpEntity);
+                return true;
+            }
+            return false;
         }
 
         #region UPDATING GAME PARAMS
 
-        private void ApplyPowerUp(PowerUpType type) {
-            Debug.Log("Power Up "+ type.ToString());
+        private void ApplyPowerUp(PowerUpType type)
+        {
             var newParams = gameParams;
             newParams.PowerUp = type;
             buffer.SetComponent(gameParamsEntity, newParams);
+            Debug.Log("Power Up " + type.ToString());
         }
 
         private void UpdateLives(int lives)

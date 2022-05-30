@@ -33,12 +33,28 @@ partial class MissileSpawnSystem : SystemBase
             });
 
             m_ElapsedTime = 0;
-            EventManager.PlayAudioEvent?.Invoke(AudioClipType.PlayerFire);
+            PlayAudio(gameState);
         }
     }
 
-    private Entity GetMissiblePrefab(GameParameters gameState, Player player) {
-        switch (gameState.PowerUp)
+    private void PlayAudio(GameParameters gameParams)
+    {
+        switch (gameParams.PowerUp)
+        {
+            case PowerUpType.Laser:
+                EventManager.PlayAudioEvent?.Invoke(AudioClipType.FireLaser);
+                break;
+            case PowerUpType.DoubleLaser:
+                EventManager.PlayAudioEvent?.Invoke(AudioClipType.FireDoubleLaser);
+                break;
+            default:
+                EventManager.PlayAudioEvent?.Invoke(AudioClipType.FireDefault);
+                break;
+        }
+    }
+
+    private Entity GetMissiblePrefab(GameParameters gameParams, Player player) {
+        switch (gameParams.PowerUp)
         {
             case PowerUpType.Laser:
                 return player.LaserMissile;
