@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class PlayerComponent : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
 {
+    // Missile Objects Which Player Ship will be shooting
+    // Type of missile to instantiate depends on power up consumed
     public GameObject DefaultMissilePrefab;
     public GameObject LaserMissilePrefab;
     public GameObject DoubleLaserMissilePrefab;
 
+    //Protection Sheild of Player Ship - Enables When Power Up is Consumed
     public GameObject Sheild;
 
     public void Convert(Entity entity, EntityManager entityManager, GameObjectConversionSystem conversionSystem)
     {
+        // All the player ship data
         entityManager.AddComponentData(entity, new Player
         {
             RotationSpeed = Constants.RotationSpeed,
